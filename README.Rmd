@@ -1,0 +1,19 @@
+---
+output: rmarkdown::github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(collapse=TRUE, comment="##", fig.retina=2, fig.path = "README_figs/README-")
+```
+
+
+
+# Electricity Load Prediction in Texas
+
+predict 24 hour load using past history of demands with statistical methods
+
+identify how wind energy affects energy forecasting
+
+data visualizations
