@@ -42,7 +42,8 @@ for (hour in seq_len(numberOfDays * 24)) {
   days[hour] = hour / 24 
 }
 
-ggplot(dfDemand, aes(x = days, y = demands)) + geom_line(color = "dodgerblue") + labs(title = "Texas Electricity Demands in 2018", x = "Days in 2018", y = "Net Demand of Texas (in MW)") 
+ggplot(dfDemand, aes(x = days, y = demands)) + geom_line(color = "dodgerblue") + 
+  labs(title = "Texas Electricity Demands in 2018", x = "Days in 2018", y = "Net Demand of Texas (in MW)") 
 ```
 
 
