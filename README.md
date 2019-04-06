@@ -12,6 +12,8 @@ data visualizations
 Introduction
 ------------
 
+But why is it important to predict hourly demand for electricity at least a day in advance? You need to know much generators needs to be on to meet the expected demand and turning on a generator requires time.
+
 Libraries/packages we will be using
 -----------------------------------
 
