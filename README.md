@@ -43,3 +43,21 @@ ggplot(dfDemand, aes(x = days, y = demands)) + geom_line(color = "dodgerblue") +
 ```
 
 <img src="README_figs/README-unnamed-chunk-4-1.png" width="672" />
+
+Wind data
+
+``` r
+dfDemand$Windless_Load = dfDemand$ERCOT.Load..MW - dfDemand$Total.Wind.Output..MW
+windDemand = dfDemand$Windless_Load
+windOutput = dfDemand$Total.Wind.Output..MW
+
+ggplot(dfDemand, aes(x = days, y = windOutput)) + geom_line(color = "orange") + 
+  labs(title = "Texas Wind Power Output in 2018", x = "Days in 2018", y = "MegaWatts")
+```
+
+<img src="README_figs/README-unnamed-chunk-5-1.png" width="672" />
+
+Wind Power looks very sporadic while electricity demands seems to have a trend.
+
+Prediction
+----------
