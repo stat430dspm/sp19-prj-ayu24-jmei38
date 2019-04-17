@@ -48,7 +48,7 @@ ggplot(dfDemand, aes(x = days, y = demands)) + geom_line(color = "dodgerblue") +
   labs(title = "Texas Electricity Demands in 2018", x = "Days in 2018", y = "Net Demand of Texas (in MW)") 
 ```
 
-<img src="README_figs/README-unnamed-chunk-4-1.png" width="672" />
+<img src="README_figs/README-electricity graph-1.png" width="672" />
 
 Wind data
 
@@ -61,7 +61,7 @@ ggplot(dfDemand, aes(x = days, y = windOutput)) + geom_line(color = "orange") +
   labs(title = "Texas Wind Power Output in 2018", x = "Days in 2018", y = "MegaWatts")
 ```
 
-<img src="README_figs/README-unnamed-chunk-5-1.png" width="672" />
+<img src="README_figs/README-wind output graph-1.png" width="672" />
 
 Wind Power looks very sporadic while electricity demands seems to have a trend.
 
@@ -72,7 +72,7 @@ For our independent variables we will use past week, past 2 days, past 1 day to 
 
 ``` r
 daysToTrainOn = c(-7,-2,-1)
-rangeOfDays = seq(-min(daysToTrainOn), numberOfDays, by = 1)
+rangeOfDays = seq(-min(daysToTrainOn), numberOfDays - 1, by = 1)
 
 Y = NULL
 for (day in rangeOfDays) {
@@ -87,9 +87,9 @@ for (day in rangeOfDays) {
   X = rbind(X, X_temp)
 }
 dim(X)
-## [1] 359  72
+## [1] 358  72
 dim(Y)
-## [1] 359  24
+## [1] 358  24
 ```
 
 After Organzing the data we will start making our train and test data.
