@@ -25,6 +25,7 @@ Libraries/packages we will be using
 
 ``` r
 library(ggplot2)
+## Warning: package 'ggplot2' was built under R version 3.5.2
 ```
 
 Load the ERCOT 2018 data
@@ -49,6 +50,9 @@ ggplot(dfDemand, aes(x = days, y = demands)) + geom_line(color = "dodgerblue") +
 ```
 
 <img src="README_figs/README-electricity graph-1.png" width="672" />
+
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+=================================
 
 Wind data
 
@@ -94,5 +98,16 @@ dim(Y)
 
 After Organzing the data we will start making our train and test data.
 
+``` r
+library(caret)
+## Warning: package 'caret' was built under R version 3.5.3
+## Loading required package: lattice
+test_inds = createDataPartition(y = 1:nrow(Y), p = 0.2, list = F)
+X_test = X[test_inds, ]; Y_test = Y[test_inds]
+X_train = X[-test_inds, ]; Y_train = Y[-test_inds]
+```
+
 Prediction
 ----------
+
+> > > > > > > 4fc9e8ac32cd46c0045b9a45ff2ebf6db356f7c6
