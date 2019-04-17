@@ -30,13 +30,13 @@ But why is it important to predict hourly demand for electricity at least a day 
 
 
 ## Libraries/packages we will be using
-```{r}
+```{r libraries}
 library(ggplot2)
 ```
 
 
 ## Load the ERCOT 2018 data
-```{r}
+```{r dataset}
 dfDemand = read.csv("ERCOT_2018_Hourly_Wind_Output.csv")
 demands = dfDemand$ERCOT.Load..MW
 numberOfDays = length(demands)/24
@@ -44,7 +44,7 @@ numberOfDays = length(demands)/24
 
 
 Let's see how does load vary over the year in Texas.
-```{r}
+```{r electricity graph}
 days = vector(length = numberOfDays * 24)
 for (hour in seq_len(numberOfDays * 24)) {
   days[hour] = hour / 24 
@@ -56,7 +56,7 @@ ggplot(dfDemand, aes(x = days, y = demands)) + geom_line(color = "dodgerblue") +
 
 Wind data
 
-```{r}
+```{r wind output graph}
 dfDemand$Windless_Load = dfDemand$ERCOT.Load..MW - dfDemand$Total.Wind.Output..MW
 windDemand = dfDemand$Windless_Load
 windOutput = dfDemand$Total.Wind.Output..MW
@@ -75,7 +75,7 @@ For our independent variables we will use past week, past 2 days, past 1 day to 
 
 ```{r organize data}
 daysToTrainOn = c(-7,-2,-1)
-rangeOfDays = seq(-min(daysToTrainOn), numberOfDays, by = 1)
+rangeOfDays = seq(-min(daysToTrainOn), numberOfDays - 1, by = 1)
 
 Y = NULL
 for (day in rangeOfDays) {
@@ -92,6 +92,8 @@ for (day in rangeOfDays) {
 dim(X)
 dim(Y)
 ```
+
+
 
 After Organzing the data we will start making our train and test data.
 
