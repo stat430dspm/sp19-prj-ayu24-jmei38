@@ -20,6 +20,7 @@ data visualizations
 
 ## Introduction
 
+But why is it important to predict hourly demand for electricity at least a day in advance? You need to know much generators needs to be on to meet the expected demand and turning on a generator requires time.
 
 ## Libraries/packages we will be using
 ```{r}
@@ -45,4 +46,26 @@ for (hour in seq_len(numberOfDays * 24)) {
 ggplot(dfDemand, aes(x = days, y = demands)) + geom_line(color = "dodgerblue") + 
   labs(title = "Texas Electricity Demands in 2018", x = "Days in 2018", y = "Net Demand of Texas (in MW)") 
 ```
+
+<<<<<<< HEAD
+=======
+Wind data
+
+```{r}
+dfDemand$Windless_Load = dfDemand$ERCOT.Load..MW - dfDemand$Total.Wind.Output..MW
+windDemand = dfDemand$Windless_Load
+windOutput = dfDemand$Total.Wind.Output..MW
+
+ggplot(dfDemand, aes(x = days, y = windOutput)) + geom_line(color = "orange") + 
+  labs(title = "Texas Wind Power Output in 2018", x = "Days in 2018", y = "MegaWatts")
+```
+
+Wind Power looks very sporadic while electricity demands seems to have a trend.
+
+## Prediction
+>>>>>>> 4fc9e8ac32cd46c0045b9a45ff2ebf6db356f7c6
+
+
+
+
 
