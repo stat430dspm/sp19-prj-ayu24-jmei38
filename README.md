@@ -1,5 +1,9 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+Roadmap:
+
+-data exploration
+
 Electricity Load Prediction in Texas
 ====================================
 
@@ -11,6 +15,8 @@ data visualizations
 
 Introduction
 ------------
+
+How do electric companies know how much power they have to generate?
 
 But why is it important to predict hourly demand for electricity at least a day in advance? You need to know much generators needs to be on to meet the expected demand and turning on a generator requires time.
 
@@ -58,6 +64,35 @@ ggplot(dfDemand, aes(x = days, y = windOutput)) + geom_line(color = "orange") +
 <img src="README_figs/README-unnamed-chunk-5-1.png" width="672" />
 
 Wind Power looks very sporadic while electricity demands seems to have a trend.
+
+Demand Prediction Strategy and Data Aggregation
+-----------------------------------------------
+
+For our independent variables we will use past week, past 2 days, past 1 day to predict the electiricty demand of tomorrow. i.e days to train on -7, -2, -1
+
+``` r
+daysToTrainOn = c(-7,-2,-1)
+rangeOfDays = seq(-min(daysToTrainOn), numberOfDays, by = 1)
+
+Y = NULL
+for (day in rangeOfDays) {
+  Y = rbind(Y, dfDemand$ERCOT.Load..MW[(day * 24): ((day + 1) * 24 - 1)])
+}
+
+X = NULL
+for (day in rangeOfDays) {
+  X_temp = cbind(t(dfDemand$ERCOT.Load..MW[(((day - 7)*24 +1)):((day - 7 + 1)*24)]),
+            t(dfDemand$ERCOT.Load..MW[(((day - 2)*24) +1):((day - 2 + 1)*24)]),
+            t(dfDemand$ERCOT.Load..MW[(((day - 1)*24) +1):((day - 1 + 1)*24)]))
+  X = rbind(X, X_temp)
+}
+dim(X)
+## [1] 359  72
+dim(Y)
+## [1] 359  24
+```
+
+After Organzing the data we will start making our train and test data.
 
 Prediction
 ----------
