@@ -10,15 +10,17 @@ knitr::opts_chunk$set(collapse=TRUE, comment="##", fig.retina=2, fig.path = "REA
 
 Roadmap:
 
--data exploration
+-data exploration, predict electricity load* with and without wind power using linear and non-linear methods,
+
+report results/conclusions
+
+*predict 24 hour load using past history of demands and identify how wind energy affects energy forecasting
+
+data visualizations
 
 # Electricity Load Prediction in Texas
 
-predict 24 hour load using past history of demands with statistical methods
 
-identify how wind energy affects energy forecasting
-
-data visualizations
 
 ## Introduction
 
@@ -32,6 +34,7 @@ But why is it important to predict hourly demand for electricity at least a day 
 ## Libraries/packages we will be using
 ```{r libraries}
 library(ggplot2)
+library(caret)
 ```
 
 
@@ -54,9 +57,8 @@ ggplot(dfDemand, aes(x = days, y = demands)) + geom_line(color = "dodgerblue") +
   labs(title = "Texas Electricity Demands in 2018", x = "Days in 2018", y = "Net Demand of Texas (in MW)") 
 ```
 
-<<<<<<< HEAD
-=======
-Wind data
+
+## Wind data
 
 ```{r wind output graph}
 dfDemand$Windless_Load = dfDemand$ERCOT.Load..MW - dfDemand$Total.Wind.Output..MW
@@ -98,16 +100,23 @@ dim(Y)
 
 
 After Organzing the data we will start making our train and test data.
+*talk about normalizing the data
 
 ```{r}
-library(caret)
 test_inds = createDataPartition(y = 1:nrow(Y), p = 0.2, list = F)
 X_test = X[test_inds, ]; Y_test = Y[test_inds]
 X_train = X[-test_inds, ]; Y_train = Y[-test_inds]
+
+X_train_scaled = scale(X_train)
+X_test_scaled = scale(X_test, center=attr(X_train_scaled, "scaled:center"), 
+                              scale=attr(X_train_scaled, "scaled:scale"))
+
+mean(X_train_scaled); mean(X_test_scaled)
+sd(X_train_scaled); sd(X_test_scaled)
 ```
 
 ## Prediction
->>>>>>> 4fc9e8ac32cd46c0045b9a45ff2ebf6db356f7c6
+
 
 
 

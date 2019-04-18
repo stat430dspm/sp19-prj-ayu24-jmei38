@@ -2,16 +2,16 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 Roadmap:
 
--data exploration
+-data exploration, predict electricity load\* with and without wind power using linear and non-linear methods,
+
+report results/conclusions
+
+\*predict 24 hour load using past history of demands and identify how wind energy affects energy forecasting
+
+data visualizations
 
 Electricity Load Prediction in Texas
 ====================================
-
-predict 24 hour load using past history of demands with statistical methods
-
-identify how wind energy affects energy forecasting
-
-data visualizations
 
 Introduction
 ------------
@@ -25,7 +25,8 @@ Libraries/packages we will be using
 
 ``` r
 library(ggplot2)
-## Warning: package 'ggplot2' was built under R version 3.5.2
+library(caret)
+## Loading required package: lattice
 ```
 
 Load the ERCOT 2018 data
@@ -51,10 +52,8 @@ ggplot(dfDemand, aes(x = days, y = demands)) + geom_line(color = "dodgerblue") +
 
 <img src="README_figs/README-electricity graph-1.png" width="672" />
 
-&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
-=================================
-
 Wind data
+---------
 
 ``` r
 dfDemand$Windless_Load = dfDemand$ERCOT.Load..MW - dfDemand$Total.Wind.Output..MW
@@ -96,18 +95,24 @@ dim(Y)
 ## [1] 358  24
 ```
 
-After Organzing the data we will start making our train and test data.
+After Organzing the data we will start making our train and test data. \*talk about normalizing the data
 
 ``` r
-library(caret)
-## Warning: package 'caret' was built under R version 3.5.3
-## Loading required package: lattice
 test_inds = createDataPartition(y = 1:nrow(Y), p = 0.2, list = F)
 X_test = X[test_inds, ]; Y_test = Y[test_inds]
 X_train = X[-test_inds, ]; Y_train = Y[-test_inds]
+
+X_train_scaled = scale(X_train)
+X_test_scaled = scale(X_test, center=attr(X_train_scaled, "scaled:center"), 
+                              scale=attr(X_train_scaled, "scaled:scale"))
+
+mean(X_train_scaled); mean(X_test_scaled)
+## [1] 3.975295e-17
+## [1] -1.975763e-05
+sd(X_train_scaled); sd(X_test_scaled)
+## [1] 0.9982745
+## [1] 1.019992
 ```
 
 Prediction
 ----------
-
-> > > > > > > 4fc9e8ac32cd46c0045b9a45ff2ebf6db356f7c6
