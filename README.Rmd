@@ -10,14 +10,13 @@ knitr::opts_chunk$set(collapse=TRUE, comment="##", fig.retina=2, fig.path = "REA
 
 Roadmap:
 
--data exploration, predict electricity load* with and without wind power using linear and non-linear methods,
+predict electricity load* with and without wind power using linear and non-linear methods (neural network, svm?),
 
 report results/conclusions
 
+-data exploration,data visualizations (make heatmap)
+
 *predict 24 hour load using past history of demands and identify how wind energy affects energy forecasting
-
-data visualizations
-
 # Electricity Load Prediction in Texas
 
 

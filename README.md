@@ -2,16 +2,13 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 Roadmap:
 
--data exploration, predict electricity load\* with and without wind power using linear and non-linear methods,
+predict electricity load\* with and without wind power using linear and non-linear methods (neural network, svm?),
 
 report results/conclusions
 
-\*predict 24 hour load using past history of demands and identify how wind energy affects energy forecasting
+-data exploration,data visualizations (make heatmap)
 
-data visualizations
-
-Electricity Load Prediction in Texas
-====================================
+\*predict 24 hour load using past history of demands and identify how wind energy affects energy forecasting \# Electricity Load Prediction in Texas
 
 Introduction
 ------------
@@ -107,11 +104,11 @@ X_test_scaled = scale(X_test, center=attr(X_train_scaled, "scaled:center"),
                               scale=attr(X_train_scaled, "scaled:scale"))
 
 mean(X_train_scaled); mean(X_test_scaled)
-## [1] 3.975295e-17
-## [1] -1.975763e-05
+## [1] 1.273586e-17
+## [1] 0.01661028
 sd(X_train_scaled); sd(X_test_scaled)
 ## [1] 0.9982745
-## [1] 1.019992
+## [1] 0.9959081
 ```
 
 Prediction
