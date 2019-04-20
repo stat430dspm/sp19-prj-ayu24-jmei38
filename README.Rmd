@@ -34,6 +34,7 @@ But why is it important to predict hourly demand for electricity at least a day 
 ```{r libraries}
 library(ggplot2)
 library(caret)
+library(dplyr)
 ```
 
 
@@ -96,7 +97,26 @@ dim(X)
 dim(Y)
 ```
 
+## Windless
+```{r}
+daysToTrainOn = c(-7,-2,-1)
+rangeOfDays = seq(-min(daysToTrainOn), numberOfDays - 1, by = 1)
 
+Y = NULL
+for (day in rangeOfDays) {
+  Y = rbind(Y, dfDemand$Windless_Load[(day * 24): ((day + 1) * 24 - 1)])
+}
+
+X = NULL
+for (day in rangeOfDays) {
+  X_temp = cbind(t(dfDemand$Windless_Load[(((day - 7)*24 +1)):((day - 7 + 1)*24)]),
+            t(dfDemand$Windless_Load[(((day - 2)*24) +1):((day - 2 + 1)*24)]),
+            t(dfDemand$Windless_Load[(((day - 1)*24) +1):((day - 1 + 1)*24)]))
+  X = rbind(X, X_temp)
+}
+dim(X)
+dim(Y)
+```
 
 After Organzing the data we will start making our train and test data.
 *talk about normalizing the data
@@ -114,8 +134,45 @@ mean(X_train_scaled); mean(X_test_scaled)
 sd(X_train_scaled); sd(X_test_scaled)
 ```
 
-## Prediction
+```{r}
+January <- dfDemand[grep("Jan", dfDemand$Date),]
+January
+```
 
+
+## Prediction
+```{r}
+theme_heatmap <- theme_light() +
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        plot.title = element_text(face = "bold",
+                                  size = 11,
+                                  hjust = 0.5),
+        axis.ticks = element_blank(),
+        axis.title.x = element_blank(),
+        axis.title.y = element_text(size=10),
+        axis.text.y = element_text(size = 8),
+        axis.text.x = element_text(size = 10),
+        legend.position = "none")
+
+## Create the plot
+gg <- ggplot(January, mapping = aes(x=factor(Date), y = factor(ï..time.date.stamp), fill = ERCOT.Load..MW)) +
+  geom_tile(colour="green") + 
+  scale_fill_gradient(low = "#f4fff6", high="#0bb730") +
+  scale_y_discrete(name = "Time Stamp", expand=c(0,0)) +
+  scale_x_discrete(name = "Date", position = "top", expand=c(0,0)) +
+  labs(title = "ERCOT Wind Over Course of Year") + 
+  theme_heatmap
+```
+
+```{r}
+print(gg)
+```
+
+```{r}
+lin <- lm(Y_train ~ X_train_scaled)
+summary(lin)
+```
 
 
 
