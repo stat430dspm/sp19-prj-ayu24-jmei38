@@ -31,15 +31,16 @@ But why is it important to predict hourly demand for electricity at least a day 
 
 
 ## Libraries/packages we will be using
-```{r libraries}
+```{r libraries, message=FALSE, warning=FALSE}
 library(ggplot2)
 library(caret)
 library(dplyr)
+library(stringr)
 ```
 
 
 ## Load the ERCOT 2018 data
-```{r dataset}
+```{r dataset, echo=FALSE}
 dfDemand = read.csv("ERCOT_2018_Hourly_Wind_Output.csv")
 demands = dfDemand$ERCOT.Load..MW
 numberOfDays = length(demands)/24
@@ -47,7 +48,7 @@ numberOfDays = length(demands)/24
 
 
 Let's see how does load vary over the year in Texas.
-```{r electricity graph}
+```{r electricity graph, echo=FALSE}
 days = vector(length = numberOfDays * 24)
 for (hour in seq_len(numberOfDays * 24)) {
   days[hour] = hour / 24 
@@ -60,7 +61,7 @@ ggplot(dfDemand, aes(x = days, y = demands)) + geom_line(color = "dodgerblue") +
 
 ## Wind data
 
-```{r wind output graph}
+```{r wind output graph, echo=FALSE}
 dfDemand$Windless_Load = dfDemand$ERCOT.Load..MW - dfDemand$Total.Wind.Output..MW
 windDemand = dfDemand$Windless_Load
 windOutput = dfDemand$Total.Wind.Output..MW
@@ -70,6 +71,58 @@ ggplot(dfDemand, aes(x = days, y = windOutput)) + geom_line(color = "orange") +
 ```
 
 Wind Power looks very sporadic while electricity demands seems to have a trend.
+
+```{r January HeatMap, echo=FALSE}
+monthOfJan = dfDemand[grep("Jan", dfDemand$Date), ]
+monthOfJan$Day = str_split_fixed(monthOfJan$ï..time.date.stamp, " ", 2)[,1]
+monthOfJan$Hour = str_split_fixed(monthOfJan$ï..time.date.stamp, " ", 2)[,2]
+monthOfJan$Day = as.Date(monthOfJan$Day, "%m/%d/%Y")
+monthOfJan$Hour = as.numeric(format(strptime(monthOfJan$Hour,"%H:%M:%S"),'%H'))
+
+#monthOfJan = monthOfJan %>% 
+ # mutate(weekday = weekdays(Day)) %>%
+  #mutate(weekday = factor(weekday, levels = c("Sunday", "Monday", "Tuesday", "Wednesday",
+   #                                           "Thursday", "Friday", "Saturday")))
+
+theme_heatmap = theme_light() +
+  theme(panel.grid = element_blank(),
+        panel.border = element_blank(),
+        plot.title = element_text(face = "bold", size = 11, hjust = 0.5),
+        axis.ticks = element_blank(),
+        axis.title.x = element_blank(),
+        axis.title.y = element_text(size = 10),
+        axis.text.x = element_text(size = 10, angle = 90, hjust = 1),
+        axis.text.y = element_text(size = 8))
+
+ggJan = ggplot(monthOfJan, mapping = aes(x = Date, y = Hour, fill = ERCOT.Load..MW)) +
+  geom_tile(colour = "white") + 
+  scale_fill_gradient(low = "#f4fff6", high="#ed420e") +
+  scale_y_reverse(breaks=c(23:0), labels=c(23:0), expand = c(0,0)) +
+  scale_x_discrete(expand = c(0,0), position = "top") +
+  labs(title = "Electricity Demand in January 2018", y = "Hour of Day", fill = "Load (in MW)") + 
+  theme_heatmap 
+
+print(ggJan)
+
+```
+```{r July HeatMap, echo=FALSE}
+monthOfJuly <- dfDemand[grep("Jul", dfDemand$Date), ]
+monthOfJuly$Day = str_split_fixed(monthOfJuly$ï..time.date.stamp, " ", 2)[,1]
+monthOfJuly$Hour = str_split_fixed(monthOfJuly$ï..time.date.stamp, " ", 2)[,2]
+monthOfJuly$Day = as.Date(monthOfJuly$Day, "%m/%d/%Y")
+monthOfJuly$Hour = as.numeric(format(strptime(monthOfJuly$Hour,"%H:%M:%S"),'%H'))
+
+ggJuly = ggplot(monthOfJuly, mapping = aes(x = Date, y = Hour, fill = ERCOT.Load..MW)) +
+  geom_tile(colour = "white") + 
+  scale_fill_gradient(low = "#f4fff6", high="#ed420e") +
+  scale_y_reverse(breaks=c(23:0), labels=c(23:0), expand = c(0,0)) +
+  scale_x_discrete(expand = c(0,0), position = "top") +
+  labs(title = "Electricity Demand in July 2018", y = "Hour of Day", fill = "Load (in MW)") +
+  theme_heatmap 
+
+print(ggJuly)
+```
+
 
 
 ## Demand Prediction Strategy and Data Aggregation
@@ -134,44 +187,12 @@ mean(X_train_scaled); mean(X_test_scaled)
 sd(X_train_scaled); sd(X_test_scaled)
 ```
 
-```{r}
-January <- dfDemand[grep("Jan", dfDemand$Date),]
-January
-```
-
-
 ## Prediction
-```{r}
-theme_heatmap <- theme_light() +
-  theme(panel.grid = element_blank(),
-        panel.border = element_blank(),
-        plot.title = element_text(face = "bold",
-                                  size = 11,
-                                  hjust = 0.5),
-        axis.ticks = element_blank(),
-        axis.title.x = element_blank(),
-        axis.title.y = element_text(size=10),
-        axis.text.y = element_text(size = 8),
-        axis.text.x = element_text(size = 10),
-        legend.position = "none")
 
-## Create the plot
-gg <- ggplot(January, mapping = aes(x=factor(Date), y = factor(ï..time.date.stamp), fill = ERCOT.Load..MW)) +
-  geom_tile(colour="green") + 
-  scale_fill_gradient(low = "#f4fff6", high="#0bb730") +
-  scale_y_discrete(name = "Time Stamp", expand=c(0,0)) +
-  scale_x_discrete(name = "Date", position = "top", expand=c(0,0)) +
-  labs(title = "ERCOT Wind Over Course of Year") + 
-  theme_heatmap
-```
-
+###try neural network
 ```{r}
-print(gg)
-```
-
-```{r}
-lin <- lm(Y_train ~ X_train_scaled)
-summary(lin)
+#lin <- lm(Y_train ~ X_train_scaled)
+#summary(lin)
 ```
 
 
