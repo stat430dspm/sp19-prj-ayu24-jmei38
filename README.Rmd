@@ -32,10 +32,16 @@ But why is it important to predict hourly demand for electricity at least a day 
 
 ## Libraries/packages we will be using
 ```{r libraries, message=FALSE, warning=FALSE}
+new_cran_packages <- c("ggplot2", "caret","stringr")
+existing_packages <- installed.packages()[,"Package"]
+missing_packages <- new_cran_packages[!(new_cran_packages %in% existing_packages)]
+if(length(missing_packages)){
+    install.packages(missing_packages)
+}
+
 library(ggplot2)
-library(caret)
-library(dplyr)
 library(stringr)
+library(caret)
 ```
 
 

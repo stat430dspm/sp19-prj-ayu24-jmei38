@@ -21,10 +21,16 @@ Libraries/packages we will be using
 -----------------------------------
 
 ``` r
+new_cran_packages <- c("ggplot2", "caret","stringr")
+existing_packages <- installed.packages()[,"Package"]
+missing_packages <- new_cran_packages[!(new_cran_packages %in% existing_packages)]
+if(length(missing_packages)){
+    install.packages(missing_packages)
+}
+
 library(ggplot2)
-library(caret)
-library(dplyr)
 library(stringr)
+library(caret)
 ```
 
 Load the ERCOT 2018 data
@@ -105,11 +111,11 @@ X_test_scaled = scale(X_test, center=attr(X_train_scaled, "scaled:center"),
                               scale=attr(X_train_scaled, "scaled:scale"))
 
 mean(X_train_scaled); mean(X_test_scaled)
-## [1] 3.99837e-17
-## [1] 0.03969436
+## [1] -1.912357e-18
+## [1] -0.02204398
 sd(X_train_scaled); sd(X_test_scaled)
 ## [1] 0.9982745
-## [1] 1.040938
+## [1] 0.9453667
 ```
 
 Prediction
