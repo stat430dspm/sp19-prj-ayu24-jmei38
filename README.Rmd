@@ -62,7 +62,8 @@ for (hour in seq_len(numberOfDays * 24)) {
 }
 
 ggplot(dfDemand, aes(x = days, y = demands)) + geom_line(color = "dodgerblue") + 
-  labs(title = "Texas Electricity Demands in 2018", x = "Days in 2018", y = "Net Demand of Texas (in MW)") 
+  labs(title = "Texas Electricity Demands in 2018", x = "Days in 2018", y = "Net Demand of Texas (in MW)") +
+  theme_minimal()
 ```
 
 
@@ -74,7 +75,7 @@ windDemand = dfDemand$Windless_Load
 windOutput = dfDemand$Total.Wind.Output..MW
 
 ggplot(dfDemand, aes(x = days, y = windOutput)) + geom_line(color = "orange") + 
-  labs(title = "Texas Wind Power Output in 2018", x = "Days in 2018", y = "MegaWatts")
+  labs(title = "Texas Wind Power Output in 2018", x = "Days in 2018", y = "MegaWatts") + theme_minimal()
 ```
 
 Wind Power looks very sporadic while electricity demands seems to have a trend.
@@ -103,10 +104,10 @@ theme_heatmap = theme_light() +
 
 ggJan = ggplot(monthOfJan, mapping = aes(x = Date, y = Hour, fill = ERCOT.Load..MW)) +
   geom_tile(colour = "white") + 
-  scale_fill_gradient(low = "#f4fff6", high="#ed420e") +
+  scale_fill_gradient(low = "#f4fff6", high= "#0bb730") +
   scale_y_reverse(breaks=c(23:0), labels=c(23:0), expand = c(0,0)) +
   scale_x_discrete(expand = c(0,0), position = "top") +
-  labs(title = "Electricity Demand in January 2018", y = "Hour of Day", fill = "Load (in MW)") + 
+  labs(title = "Electricity Demand Profile in January 2018", y = "Hour of Day", fill = "Load (in MW)") + 
   theme_heatmap 
 
 print(ggJan)
@@ -121,10 +122,10 @@ monthOfJuly$Hour = as.numeric(format(strptime(monthOfJuly$Hour,"%H:%M:%S"),'%H')
 
 ggJuly = ggplot(monthOfJuly, mapping = aes(x = Date, y = Hour, fill = ERCOT.Load..MW)) +
   geom_tile(colour = "white") + 
-  scale_fill_gradient(low = "#f4fff6", high="#ed420e") +
+  scale_fill_gradient(low = "#f4fff6", high= "#0bb730") +
   scale_y_reverse(breaks=c(23:0), labels=c(23:0), expand = c(0,0)) +
   scale_x_discrete(expand = c(0,0), position = "top") +
-  labs(title = "Electricity Demand in July 2018", y = "Hour of Day", fill = "Load (in MW)") +
+  labs(title = "Electricity Demand Profile in July 2018", y = "Hour of Day", fill = "Load (in MW)") +
   theme_heatmap 
 
 print(ggJuly)

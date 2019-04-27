@@ -113,11 +113,11 @@ X_test_scaled = scale(X_test, center=attr(X_train_scaled, "scaled:center"),
                               scale=attr(X_train_scaled, "scaled:scale"))
 
 mean(X_train_scaled); mean(X_test_scaled)
-## [1] -9.985196e-18
-## [1] 0.07414125
+## [1] -6.02314e-17
+## [1] 0.09678187
 sd(X_train_scaled); sd(X_test_scaled)
 ## [1] 0.9982745
-## [1] 1.023321
+## [1] 1.033151
 
 colnames(Y_train) = c("day0.00", "day0.01",  "day0.02", "day0.03", "day0.04", "day0.05", "day0.06", "day0.07"
                 , "day0.08", "day0.09", "day0.10", "day0.11", "day0.12", "day0.13", "day0.14", "day0.15",
@@ -152,5 +152,5 @@ lm(Y_train$day0.00 ~ X_train$day7.00 + X_train$day2.00 + X_train$day1.00)
 ## 
 ## Coefficients:
 ##     (Intercept)  X_train$day7.00  X_train$day2.00  X_train$day1.00  
-##       2758.1726           0.1035          -0.1177           0.9955
+##       2922.8986           0.1044          -0.2283           1.1028
 ```
