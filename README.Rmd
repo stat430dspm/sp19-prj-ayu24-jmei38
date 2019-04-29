@@ -110,8 +110,8 @@ ggJan = ggplot(monthOfJan, mapping = aes(x = Date, y = Hour, fill = ERCOT.Load..
   theme_heatmap 
 
 print(ggJan)
-
 ```
+
 ```{r July HeatMap, echo=FALSE}
 monthOfJuly <- dfDemand[grep("Jul", dfDemand$Date), ]
 monthOfJuly$Day = str_split_fixed(monthOfJuly$ï..time.date.stamp, " ", 2)[,1]
@@ -353,6 +353,36 @@ for (i in 1:24) {
 }
 temp
 ```
+```{r}
+data <- list(dat0 = list(model = mod0, test = newdat0),
+             dat1 = list(model = mod1, test = newdat1),
+             dat2 = list(model = mod2, test = newdat2),
+             dat3 = list(model = mod3, test = newdat3),
+             dat4 = list(model = mod4, test = newdat4),
+             dat5 = list(model = mod5, test = newdat5),
+             dat6 = list(model = mod6, test = newdat6),
+             dat7 = list(model = mod7, test = newdat7),
+             dat8 = list(model = mod8, test = newdat8),
+             dat9 = list(model = mod9, test = newdat9),
+             dat10 = list(model = mod10, test = newdat10),
+             dat11 = list(model = mod11, test = newdat11),
+             dat12 = list(model = mod12, test = newdat12),
+             dat13 = list(model = mod13, test = newdat13),
+             dat14 = list(model = mod14, test = newdat14),
+             dat15 = list(model = mod15, test = newdat15),
+             dat16 = list(model = mod16, test = newdat16),
+             dat17 = list(model = mod17, test = newdat17),
+             dat18 = list(model = mod18, test = newdat18),
+             dat19 = list(model = mod19, test = newdat19),
+             dat20 = list(model = mod20, test = newdat20),
+             dat21 = list(model = mod21, test = newdat21),
+             dat22 = list(model = mod22, test = newdat22),
+             dat23 = list(model = mod23, test = newdat23))
+res = sapply(data, function(dat) predict(dat$model, newdata = dat$test)[1])
+res
+
+```
+
 
 `
 

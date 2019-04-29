@@ -45,7 +45,9 @@ Wind data
 
 Wind Power looks very sporadic while electricity demands seems to have a trend.
 
-<img src="README_figs/README-January HeatMap-1.png" width="672" /> <img src="README_figs/README-July HeatMap-1.png" width="672" />
+<img src="README_figs/README-January HeatMap-1.png" width="672" />
+
+<img src="README_figs/README-July HeatMap-1.png" width="672" />
 
 Demand Prediction Strategy and Data Aggregation
 -----------------------------------------------
@@ -245,7 +247,7 @@ newdat23 = data.frame(pday7 = X_test$day7.23, pday2=X_test$day2.23, pday1=X_test
 #use our model to predict the expect load at hour 0
 predict(mod0, newdata = newdat0)[1]
 ##        1 
-## 35404.69
+## 39430.09
 
 # 72 numbers should be returned; 1 for each day
 ```
@@ -257,30 +259,65 @@ for (i in 1:24) {
 }
 temp
 ##                 1
-##  [1,]  0 35404.69
-##  [2,]  1 33788.02
-##  [3,]  2 33020.14
-##  [4,]  3 32755.51
-##  [5,]  4 33146.93
-##  [6,]  5 34779.76
-##  [7,]  6 38964.72
-##  [8,]  7 44029.63
-##  [9,]  8 45744.20
-## [10,]  9 43869.92
-## [11,] 10 42693.49
-## [12,] 11 42033.56
-## [13,] 12 41126.56
-## [14,] 13 40512.10
-## [15,] 14 39980.77
-## [16,] 15 39631.62
-## [17,] 16 39307.17
-## [18,] 17 39637.21
-## [19,] 18 41997.60
-## [20,] 19 43511.69
-## [21,] 20 44395.65
-## [22,] 21 44864.98
-## [23,] 22 43679.22
-## [24,] 23 41841.00
+##  [1,]  0 39430.09
+##  [2,]  1 37771.42
+##  [3,]  2 37227.35
+##  [4,]  3 37482.88
+##  [5,]  4 37740.43
+##  [6,]  5 38708.58
+##  [7,]  6 42382.58
+##  [8,]  7 46800.14
+##  [9,]  8 48155.26
+## [10,]  9 46092.58
+## [11,] 10 44140.57
+## [12,] 11 42814.01
+## [13,] 12 41519.75
+## [14,] 13 40451.49
+## [15,] 14 39414.04
+## [16,] 15 38731.10
+## [17,] 16 38571.77
+## [18,] 17 39232.09
+## [19,] 18 41950.08
+## [20,] 19 43425.49
+## [21,] 20 44253.15
+## [22,] 21 44602.22
+## [23,] 22 43660.68
+## [24,] 23 41282.58
+```
+
+``` r
+data <- list(dat0 = list(model = mod0, test = newdat0),
+             dat1 = list(model = mod1, test = newdat1),
+             dat2 = list(model = mod2, test = newdat2),
+             dat3 = list(model = mod3, test = newdat3),
+             dat4 = list(model = mod4, test = newdat4),
+             dat5 = list(model = mod5, test = newdat5),
+             dat6 = list(model = mod6, test = newdat6),
+             dat7 = list(model = mod7, test = newdat7),
+             dat8 = list(model = mod8, test = newdat8),
+             dat9 = list(model = mod9, test = newdat9),
+             dat10 = list(model = mod10, test = newdat10),
+             dat11 = list(model = mod11, test = newdat11),
+             dat12 = list(model = mod12, test = newdat12),
+             dat13 = list(model = mod13, test = newdat13),
+             dat14 = list(model = mod14, test = newdat14),
+             dat15 = list(model = mod15, test = newdat15),
+             dat16 = list(model = mod16, test = newdat16),
+             dat17 = list(model = mod17, test = newdat17),
+             dat18 = list(model = mod18, test = newdat18),
+             dat19 = list(model = mod19, test = newdat19),
+             dat20 = list(model = mod20, test = newdat20),
+             dat21 = list(model = mod21, test = newdat21),
+             dat22 = list(model = mod22, test = newdat22),
+             dat23 = list(model = mod23, test = newdat23))
+res = sapply(data, function(dat) predict(dat$model, newdata = dat$test)[1])
+res
+##   dat0.1   dat1.1   dat2.1   dat3.1   dat4.1   dat5.1   dat6.1   dat7.1 
+## 39430.09 37771.42 37227.35 37482.88 37740.43 38708.58 42382.58 46800.14 
+##   dat8.1   dat9.1  dat10.1  dat11.1  dat12.1  dat13.1  dat14.1  dat15.1 
+## 48155.26 46092.58 44140.57 42814.01 41519.75 40451.49 39414.04 38731.10 
+##  dat16.1  dat17.1  dat18.1  dat19.1  dat20.1  dat21.1  dat22.1  dat23.1 
+## 38571.77 39232.09 41950.08 43425.49 44253.15 44602.22 43660.68 41282.58
 ```
 
 \`
