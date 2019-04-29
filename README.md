@@ -190,16 +190,16 @@ colnames(data22) <- c('day0','pday7','pday2','pday1')
 colnames(data23) <- c('day0','pday7','pday2','pday1')
 
 #linear model to predict load at hour i
-mod00 = lm(day0 ~., data = data00)
-mod01 = lm(day0 ~., data = data01)
-mod02 = lm(day0 ~., data = data02)
-mod03 = lm(day0 ~., data = data03)
-mod04 = lm(day0 ~., data = data04)
-mod05 = lm(day0 ~., data = data05)
-mod06 = lm(day0 ~., data = data06)
-mod07 = lm(day0 ~., data = data07)
-mod08 = lm(day0 ~., data = data08)
-mod09 = lm(day0 ~., data = data09)
+mod0 = lm(day0 ~., data = data00)
+mod1 = lm(day0 ~., data = data01)
+mod2 = lm(day0 ~., data = data02)
+mod3 = lm(day0 ~., data = data03)
+mod4 = lm(day0 ~., data = data04)
+mod5 = lm(day0 ~., data = data05)
+mod6 = lm(day0 ~., data = data06)
+mod7 = lm(day0 ~., data = data07)
+mod8 = lm(day0 ~., data = data08)
+mod9 = lm(day0 ~., data = data09)
 mod10 = lm(day0 ~., data = data10)
 mod11 = lm(day0 ~., data = data11)
 mod12 = lm(day0 ~., data = data12)
@@ -216,16 +216,16 @@ mod22 = lm(day0 ~., data = data22)
 mod23 = lm(day0 ~., data = data23)
 
 #retrieve testing data at hour i
-newdat00 = data.frame(pday7 = X_test$day7.00, pday2=X_test$day2.00, pday1=X_test$day1.00)
-newdat01 = data.frame(pday7 = X_test$day7.01, pday2=X_test$day2.01, pday1=X_test$day1.01)
-newdat02 = data.frame(pday7 = X_test$day7.02, pday2=X_test$day2.02, pday1=X_test$day1.02)
-newdat03 = data.frame(pday7 = X_test$day7.03, pday2=X_test$day2.03, pday1=X_test$day1.03)
-newdat04 = data.frame(pday7 = X_test$day7.04, pday2=X_test$day2.04, pday1=X_test$day1.04)
-newdat05 = data.frame(pday7 = X_test$day7.05, pday2=X_test$day2.05, pday1=X_test$day1.05)
-newdat06 = data.frame(pday7 = X_test$day7.06, pday2=X_test$day2.06, pday1=X_test$day1.06)
-newdat07 = data.frame(pday7 = X_test$day7.07, pday2=X_test$day2.07, pday1=X_test$day1.07)
-newdat08 = data.frame(pday7 = X_test$day7.08, pday2=X_test$day2.08, pday1=X_test$day1.08)
-newdat09 = data.frame(pday7 = X_test$day7.09, pday2=X_test$day2.09, pday1=X_test$day1.09)
+newdat0 = data.frame(pday7 = X_test$day7.00, pday2=X_test$day2.00, pday1=X_test$day1.00)
+newdat1 = data.frame(pday7 = X_test$day7.01, pday2=X_test$day2.01, pday1=X_test$day1.01)
+newdat2 = data.frame(pday7 = X_test$day7.02, pday2=X_test$day2.02, pday1=X_test$day1.02)
+newdat3 = data.frame(pday7 = X_test$day7.03, pday2=X_test$day2.03, pday1=X_test$day1.03)
+newdat4 = data.frame(pday7 = X_test$day7.04, pday2=X_test$day2.04, pday1=X_test$day1.04)
+newdat5 = data.frame(pday7 = X_test$day7.05, pday2=X_test$day2.05, pday1=X_test$day1.05)
+newdat6 = data.frame(pday7 = X_test$day7.06, pday2=X_test$day2.06, pday1=X_test$day1.06)
+newdat7 = data.frame(pday7 = X_test$day7.07, pday2=X_test$day2.07, pday1=X_test$day1.07)
+newdat8 = data.frame(pday7 = X_test$day7.08, pday2=X_test$day2.08, pday1=X_test$day1.08)
+newdat9 = data.frame(pday7 = X_test$day7.09, pday2=X_test$day2.09, pday1=X_test$day1.09)
 newdat10 = data.frame(pday7 = X_test$day7.10, pday2=X_test$day2.10, pday1=X_test$day1.10)
 newdat11 = data.frame(pday7 = X_test$day7.11, pday2=X_test$day2.11, pday1=X_test$day1.11)
 newdat12 = data.frame(pday7 = X_test$day7.12, pday2=X_test$day2.12, pday1=X_test$day1.12)
@@ -241,26 +241,46 @@ newdat21 = data.frame(pday7 = X_test$day7.21, pday2=X_test$day2.21, pday1=X_test
 newdat22 = data.frame(pday7 = X_test$day7.22, pday2=X_test$day2.22, pday1=X_test$day1.22)
 newdat23 = data.frame(pday7 = X_test$day7.23, pday2=X_test$day2.23, pday1=X_test$day1.23)
 
+
 #use our model to predict the expect load at hour 0
-predict(mod00, newdata = newdat00)
-##        1        2        3        4        5        6        7        8 
-## 47474.89 32831.06 32450.38 32191.88 40957.16 39164.30 33473.67 33881.87 
-##        9       10       11       12       13       14       15       16 
-## 35855.63 34146.72 34934.19 33877.05 31769.78 31961.25 32501.15 33210.13 
-##       17       18       19       20       21       22       23       24 
-## 35371.04 33673.39 35964.99 32911.51 35536.71 38132.64 40449.26 40524.39 
-##       25       26       27       28       29       30       31       32 
-## 42109.16 38795.03 40571.96 43257.31 45882.53 47929.98 47100.45 45873.56 
-##       33       34       35       36       37       38       39       40 
-## 45486.56 46644.08 49467.49 47783.07 41067.67 43218.60 43327.64 47027.58 
-##       41       42       43       44       45       46       47       48 
-## 48053.92 49603.18 51041.20 46450.50 47803.91 42670.64 48927.24 48138.72 
-##       49       50       51       52       53       54       55       56 
-## 39132.12 41027.34 44172.87 40531.69 35215.24 37829.86 40817.00 42499.37 
-##       57       58       59       60       61       62       63       64 
-## 40438.63 33592.96 32483.76 32337.33 31628.89 32915.86 40446.52 36828.25 
-##       65       66       67       68       69       70       71       72 
-## 42176.30 35151.48 39474.28 43462.43 34586.10 40209.86 32372.52 37561.43
+predict(mod0, newdata = newdat0)[1]
+##        1 
+## 35404.69
 
 # 72 numbers should be returned; 1 for each day
 ```
+
+``` r
+temp = NULL
+for (i in 1:24) {
+  temp = rbind(temp, c(i-1, predict(eval(as.name(paste0('mod',i-1))), newdata = eval(as.name(paste0('newdat',i-1))))[1]))
+}
+temp
+##                 1
+##  [1,]  0 35404.69
+##  [2,]  1 33788.02
+##  [3,]  2 33020.14
+##  [4,]  3 32755.51
+##  [5,]  4 33146.93
+##  [6,]  5 34779.76
+##  [7,]  6 38964.72
+##  [8,]  7 44029.63
+##  [9,]  8 45744.20
+## [10,]  9 43869.92
+## [11,] 10 42693.49
+## [12,] 11 42033.56
+## [13,] 12 41126.56
+## [14,] 13 40512.10
+## [15,] 14 39980.77
+## [16,] 15 39631.62
+## [17,] 16 39307.17
+## [18,] 17 39637.21
+## [19,] 18 41997.60
+## [20,] 19 43511.69
+## [21,] 20 44395.65
+## [22,] 21 44864.98
+## [23,] 22 43679.22
+## [24,] 23 41841.00
+```
+
+\`
