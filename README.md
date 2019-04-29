@@ -157,30 +157,49 @@ Prediction
 Predict Load of tommorrow at hour i based on last 7 days at time i, last 2 days at time i and yesterday at time i where i is 0,1,2..23.
 
 ``` r
+#predict the load at each hour using linear regression
+
+#retrieve training data at hour 0
 data00 = data.frame(Y_train$day0.00,X_train$day7.00,X_train$day2.00,X_train$day1.00)
+
+#name our variables
 colnames(data00) <- c('day0','pday7','pday2','pday1')
+
+#linear model to predict load at hour 0
 mod00 = lm(day0 ~., data = data00)
 
-newdat = data.frame(pday7 = X_test$day7.00, pday2=X_test$day2.00, pday1=X_test$day1.00)
-predict(mod00, newdata = newdat)
-##        1        2        3        4        5        6        7        8 
-## 47101.79 38059.60 40423.26 33729.86 37223.97 37042.99 36885.83 42080.69 
-##        9       10       11       12       13       14       15       16 
-## 32634.22 35331.29 37207.14 34172.04 33964.29 31295.35 33189.34 33234.56 
-##       17       18       19       20       21       22       23       24 
-## 34603.77 31859.52 36305.96 34737.34 32308.97 31739.48 33155.59 34586.92 
-##       25       26       27       28       29       30       31       32 
-## 37167.77 40436.08 42686.92 40622.46 42454.42 46830.57 44841.61 43539.50 
-##       33       34       35       36       37       38       39       40 
-## 42342.62 47025.74 48988.10 49635.94 43659.05 43409.59 46760.42 51241.48 
-##       41       42       43       44       45       46       47       48 
-## 42360.83 46507.06 46961.52 48218.63 46292.55 48109.32 48162.19 48848.21 
-##       49       50       51       52       53       54       55       56 
-## 48809.18 38192.71 41748.28 36136.49 42892.92 38485.54 40958.65 36341.30 
-##       57       58       59       60       61       62       63       64 
-## 37933.60 37294.58 33529.70 32061.62 31661.42 35682.32 34123.25 33169.59 
-##       65       66       67       68       69       70       71       72 
-## 39837.28 33239.85 33601.55 38027.95 34733.81 41822.21 40293.50 42288.25
+#retrieve testing data at hour 0
+newdat00 = data.frame(pday7 = X_test$day7.00, pday2=X_test$day2.00, pday1=X_test$day1.00)
 
-#repeat this for the other times, then visualize the results
+#use our model to predict the expect load at hour 0
+predict(mod00, newdata = newdat00)
+##        1        2        3        4        5        6        7        8 
+## 34818.91 34582.96 33233.47 32103.68 35075.86 37984.86 36487.84 32742.16 
+##        9       10       11       12       13       14       15       16 
+## 32160.33 36179.37 37533.95 39170.58 35862.30 34679.52 35686.41 31168.89 
+##       17       18       19       20       21       22       23       24 
+## 33223.93 35365.57 35024.77 31486.18 36576.25 34669.76 31419.34 34880.96 
+##       25       26       27       28       29       30       31       32 
+## 31708.86 35516.52 34024.80 40360.50 40441.53 40472.37 38678.90 41547.52 
+##       33       34       35       36       37       38       39       40 
+## 46641.79 49776.55 46361.45 47088.42 43748.13 50892.74 49326.26 48769.77 
+##       41       42       43       44       45       46       47       48 
+## 46428.71 47965.97 48506.72 46071.33 47159.58 47838.00 48577.83 45944.95 
+##       49       50       51       52       53       54       55       56 
+## 42946.95 39864.61 40876.98 41124.61 40300.16 36785.19 42512.35 37193.90 
+##       57       58       59       60       61       62       63       64 
+## 33568.98 31449.73 35196.56 35603.23 34405.18 46071.21 36537.84 35391.83 
+##       65       66       67       68       69       70       71       72 
+## 39782.42 33388.74 37765.00 36720.36 38807.35 35096.12 32272.60 37444.38
+
+# 72 numbers should be returned; 1 for each day
+
+#repeat this for each hour, compare the results to Y_test and visualize the results
+
+data01 = data.frame(Y_train$day0.01,X_train$day7.01,X_train$day2.01,X_train$day1.01)
+colnames(data01) <- c('day0','pday7','pday2','pday1')
+mod01 = lm(day0 ~., data = data01)
+
+newdat01 = data.frame(pday7 = X_test$day7.01, pday2=X_test$day2.01, pday1=X_test$day1.01)
+#predict(mod01, newdata = newdat01)
 ```
