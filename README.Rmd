@@ -221,6 +221,29 @@ colnames(X_train) = c("day7.00", "day7.01",  "day7.02", "day7.03", "day7.04", "d
 Predict Load of tommorrow at hour i based on last 7 days at time i, last 2 days at time i and yesterday at time i where i is 0,1,2..23.
 ```{r}
 lm(Y_train$day0.00 ~ X_train$day7.00 + X_train$day2.00 + X_train$day1.00)
+lm(Y_train$day0.01 ~ X_train$day7.01 + X_train$day2.01 + X_train$day1.01)
+lm(Y_train$day0.02 ~ X_train$day7.02 + X_train$day2.02 + X_train$day1.02)
+lm(Y_train$day0.03 ~ X_train$day7.03 + X_train$day2.03 + X_train$day1.03)
+lm(Y_train$day0.04 ~ X_train$day7.04 + X_train$day2.04 + X_train$day1.04)
+lm(Y_train$day0.05 ~ X_train$day7.05 + X_train$day2.05 + X_train$day1.05)
+lm(Y_train$day0.06 ~ X_train$day7.06 + X_train$day2.06 + X_train$day1.06)
+lm(Y_train$day0.07 ~ X_train$day7.07 + X_train$day2.07 + X_train$day1.07)
+lm(Y_train$day0.08 ~ X_train$day7.08 + X_train$day2.08 + X_train$day1.08)
+lm(Y_train$day0.09 ~ X_train$day7.09 + X_train$day2.09 + X_train$day1.09)
+lm(Y_train$day0.10 ~ X_train$day7.10 + X_train$day2.10 + X_train$day1.10)
+lm(Y_train$day0.11 ~ X_train$day7.11 + X_train$day2.11 + X_train$day1.11)
+lm(Y_train$day0.12 ~ X_train$day7.12 + X_train$day2.12 + X_train$day1.12)
+lm(Y_train$day0.13 ~ X_train$day7.13 + X_train$day2.13 + X_train$day1.13)
+lm(Y_train$day0.14 ~ X_train$day7.14 + X_train$day2.14 + X_train$day1.14)
+lm(Y_train$day0.15 ~ X_train$day7.15 + X_train$day2.15 + X_train$day1.15)
+lm(Y_train$day0.16 ~ X_train$day7.16 + X_train$day2.16 + X_train$day1.16)
+lm(Y_train$day0.17 ~ X_train$day7.17 + X_train$day2.17 + X_train$day1.17)
+lm(Y_train$day0.18 ~ X_train$day7.18 + X_train$day2.18 + X_train$day1.18)
+lm(Y_train$day0.19 ~ X_train$day7.19 + X_train$day2.19 + X_train$day1.19)
+lm(Y_train$day0.20 ~ X_train$day7.20 + X_train$day2.20 + X_train$day1.20)
+lm(Y_train$day0.21 ~ X_train$day7.21 + X_train$day2.21 + X_train$day1.21)
+lm(Y_train$day0.22 ~ X_train$day7.22 + X_train$day2.22 + X_train$day1.22)
+lm(Y_train$day0.23 ~ X_train$day7.23 + X_train$day2.23 + X_train$day1.23)
 ```
 
 
