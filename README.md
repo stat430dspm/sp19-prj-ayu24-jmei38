@@ -21,7 +21,7 @@ Libraries/packages we will be using
 -----------------------------------
 
 ``` r
-new_cran_packages <- c("ggplot2", "caret","stringr")
+new_cran_packages <- c("ggplot2", "caret","stringr", "cowplot", "grid", "gridExtra")
 existing_packages <- installed.packages()[,"Package"]
 missing_packages <- new_cran_packages[!(new_cran_packages %in% existing_packages)]
 if(length(missing_packages)){
@@ -31,6 +31,9 @@ if(length(missing_packages)){
 library(ggplot2)
 library(stringr)
 library(caret)
+library(cowplot)
+library(grid)
+library(gridExtra)
 ```
 
 Load the ERCOT 2018 data
@@ -81,6 +84,7 @@ X = data.frame(X)
 After Organzing the data we will start making our train and test data.
 
 ``` r
+set.seed(62)
 test_inds = createDataPartition(y = 1:nrow(Y), p = 0.2, list = F)
 
 X_test = X[test_inds, ]; Y_test = Y[test_inds,]
@@ -247,42 +251,17 @@ newdat23 = data.frame(pday7 = X_test$day7.23, pday2=X_test$day2.23, pday1=X_test
 #use our model to predict the expect load at hour 0
 predict(mod0, newdata = newdat0)[1]
 ##        1 
-## 35459.88
+## 47248.32
 
 # 72 numbers should be returned; 1 for each day
 ```
 
 ``` r
-temp = NULL
-for (i in 1:24) {
-  temp = rbind(temp, c(i-1, predict(eval(as.name(paste0('mod',i-1))), newdata = eval(as.name(paste0('newdat',i-1))))[1]))
-}
-temp
-##                 1
-##  [1,]  0 35459.88
-##  [2,]  1 33859.02
-##  [3,]  2 33102.11
-##  [4,]  3 32863.88
-##  [5,]  4 33221.03
-##  [6,]  5 34848.70
-##  [7,]  6 39226.97
-##  [8,]  7 44494.55
-##  [9,]  8 45744.76
-## [10,]  9 43696.43
-## [11,] 10 42466.51
-## [12,] 11 41809.60
-## [13,] 12 40911.87
-## [14,] 13 40228.47
-## [15,] 14 39578.12
-## [16,] 15 39182.28
-## [17,] 16 39092.03
-## [18,] 17 39708.71
-## [19,] 18 42433.69
-## [20,] 19 43856.08
-## [21,] 20 45010.74
-## [22,] 21 45884.33
-## [23,] 22 44875.01
-## [24,] 23 43015.36
+#temp = NULL
+#for (i in 1:24) {
+ # temp = rbind(temp, c(i-1, predict(eval(as.name(paste0('mod',i-1))), newdata = eval(as.name(paste0('newdat',i-1))))[1]))
+#}
+#temp
 ```
 
 ``` r
@@ -310,14 +289,90 @@ data <- list(dat0 = list(model = mod0, test = newdat0),
              dat21 = list(model = mod21, test = newdat21),
              dat22 = list(model = mod22, test = newdat22),
              dat23 = list(model = mod23, test = newdat23))
-
-resultday1 = sapply(data, function(dat) predict(dat$model, newdata = dat$test)[1])
-res1 = data.frame(time = 0:23, expected = resultday1, actual = as.numeric(as.vector(Y_test[1,])))
-ggplot(res1, aes(time)) + 
-  geom_line(aes(y = actual, color = "actual"))+ 
-  geom_line(aes(y = expected, color = "expected"))
 ```
 
-<img src="README_figs/README-unnamed-chunk-6-1.png" width="672" />
+Results
+=======
+
+``` r
+resultday1 = sapply(data, function(dat) predict(dat$model, newdata = dat$test)[1])
+res1 = data.frame(time = 0:23, Predicted = resultday1, Measured = as.numeric(as.vector(Y_test[1,])))
+
+gph1 <- ggplot(res1, aes(time)) + 
+  geom_line(aes(y = Measured, color = "Measured")) + 
+  geom_line(aes(y = Predicted, color = "Predicted")) +
+  labs(title = "Day 1") +
+  theme_classic() + 
+  theme(legend.title=element_blank(), axis.title.x=element_blank(), axis.title.y=element_blank())
+
+resultday2 = sapply(data, function(dat) predict(dat$model, newdata = dat$test)[2])
+res2 = data.frame(time = 0:23, Predicted = resultday1, Measured = as.numeric(as.vector(Y_test[2,])))
+
+gph2 <- ggplot(res2, aes(time)) + 
+  geom_line(aes(y = Measured, color = "Measured")) + 
+  geom_line(aes(y = Predicted, color = "Predicted")) +
+  labs(title = "Day 2") +
+  theme_classic() + 
+  theme(legend.title=element_blank(), axis.title.x=element_blank(), axis.title.y=element_blank(), legend.position="none")
+
+resultday3 = sapply(data, function(dat) predict(dat$model, newdata = dat$test)[3])
+res3 = data.frame(time = 0:23, Predicted = resultday1, Measured = as.numeric(as.vector(Y_test[3,])))
+
+gph3 <- ggplot(res3, aes(time)) + 
+  geom_line(aes(y = Measured, color = "Measured")) + 
+  geom_line(aes(y = Predicted, color = "Predicted")) +
+  labs(title = "Day 3") +
+  theme_classic() + 
+  theme(legend.title=element_blank(), axis.title.x=element_blank(), axis.title.y=element_blank(), legend.position="none")
+
+resultday4 = sapply(data, function(dat) predict(dat$model, newdata = dat$test)[4])
+res4 = data.frame(time = 0:23, Predicted = resultday1, Measured = as.numeric(as.vector(Y_test[4,])))
+
+gph4 <- ggplot(res4, aes(time)) + 
+  geom_line(aes(y = Measured, color = "Measured")) + 
+  geom_line(aes(y = Predicted, color = "Predicted")) +
+  labs(title = "Day 4") +
+  theme_classic() + 
+  theme(legend.title=element_blank(), axis.title.x=element_blank(), axis.title.y=element_blank(), legend.position="none")
+
+resultday5 = sapply(data, function(dat) predict(dat$model, newdata = dat$test)[5])
+res5 = data.frame(time = 0:23, Predicted = resultday1, Measured = as.numeric(as.vector(Y_test[5,])))
+
+gph5 <- ggplot(res5, aes(time)) + 
+  geom_line(aes(y = Measured, color = "Measured")) + 
+  geom_line(aes(y = Predicted, color = "Predicted")) +
+  labs(title = "Day 5") +
+  theme_classic() + 
+  theme(legend.title=element_blank(), axis.title.x=element_blank(), axis.title.y=element_blank(), legend.position="none")
+
+resultday6 = sapply(data, function(dat) predict(dat$model, newdata = dat$test)[6])
+res6 = data.frame(time = 0:23, Predicted = resultday1, Measured = as.numeric(as.vector(Y_test[6,])))
+
+gph6 <- ggplot(res6, aes(time)) + 
+  geom_line(aes(y = Measured, color = "Measured")) + 
+  geom_line(aes(y = Predicted, color = "Predicted")) +
+  labs(title = "Day 6") +
+  theme_classic() + 
+  theme(legend.title=element_blank(), axis.title.x=element_blank(), axis.title.y=element_blank(), legend.position="none")
+```
+
+``` r
+legend = get_legend(gph1 + theme(legend.position="bottom"))
+gph1 = gph1 + theme(legend.position = "none")
+
+
+
+bigPlot = plot_grid(gph1, gph2, gph3, gph4, gph5, gph6, align = 'vh', hjust = -1, nrow = 2)
+
+p <- plot_grid(bigPlot, legend, ncol = 1, rel_heights = c(1,.2))
+y.grob <- textGrob("Demand in Texas (in MW)", 
+                   gp=gpar(fontface="bold", col="black", fontsize=15), rot=90)
+x.grob <- textGrob("Time of day (in hours)", 
+                   gp=gpar(fontface="bold", col="black", fontsize=15))
+
+grid.arrange(arrangeGrob(p, left = y.grob, bottom = x.grob))
+```
+
+<img src="README_figs/README-unnamed-chunk-8-1.png" width="672" />
 
 \`
