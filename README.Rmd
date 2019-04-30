@@ -381,7 +381,9 @@ data <- list(dat0 = list(model = mod0, test = newdat0),
 
 resultday1 = sapply(data, function(dat) predict(dat$model, newdata = dat$test)[1])
 res1 = data.frame(time = 0:23, expected = resultday1, actual = as.numeric(as.vector(Y_test[1,])))
-ggplot(res1, aes(time)) + geom_line(aes(y = expected, colour = "expected")) + geom_line(aes(y = actual, colour = "actual"))
+ggplot(res1, aes(time)) + 
+  geom_line(aes(y = actual, color = "actual"))+ 
+  geom_line(aes(y = expected, color = "expected"))
 
 ```
 
