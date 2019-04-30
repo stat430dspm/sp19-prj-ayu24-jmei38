@@ -247,7 +247,7 @@ newdat23 = data.frame(pday7 = X_test$day7.23, pday2=X_test$day2.23, pday1=X_test
 #use our model to predict the expect load at hour 0
 predict(mod0, newdata = newdat0)[1]
 ##        1 
-## 39430.09
+## 46688.25
 
 # 72 numbers should be returned; 1 for each day
 ```
@@ -259,30 +259,30 @@ for (i in 1:24) {
 }
 temp
 ##                 1
-##  [1,]  0 39430.09
-##  [2,]  1 37771.42
-##  [3,]  2 37227.35
-##  [4,]  3 37482.88
-##  [5,]  4 37740.43
-##  [6,]  5 38708.58
-##  [7,]  6 42382.58
-##  [8,]  7 46800.14
-##  [9,]  8 48155.26
-## [10,]  9 46092.58
-## [11,] 10 44140.57
-## [12,] 11 42814.01
-## [13,] 12 41519.75
-## [14,] 13 40451.49
-## [15,] 14 39414.04
-## [16,] 15 38731.10
-## [17,] 16 38571.77
-## [18,] 17 39232.09
-## [19,] 18 41950.08
-## [20,] 19 43425.49
-## [21,] 20 44253.15
-## [22,] 21 44602.22
-## [23,] 22 43660.68
-## [24,] 23 41282.58
+##  [1,]  0 46688.25
+##  [2,]  1 44403.88
+##  [3,]  2 43068.09
+##  [4,]  3 41837.14
+##  [5,]  4 41123.63
+##  [6,]  5 41154.02
+##  [7,]  6 42874.45
+##  [8,]  7 43687.81
+##  [9,]  8 44351.90
+## [10,]  9 44196.01
+## [11,] 10 44684.25
+## [12,] 11 44597.54
+## [13,] 12 43784.55
+## [14,] 13 42789.37
+## [15,] 14 41666.77
+## [16,] 15 40592.37
+## [17,] 16 40483.01
+## [18,] 17 40754.73
+## [19,] 18 42174.41
+## [20,] 19 42656.35
+## [21,] 20 41668.05
+## [22,] 21 41697.89
+## [23,] 22 41320.59
+## [24,] 23 40070.69
 ```
 
 ``` r
@@ -310,14 +310,12 @@ data <- list(dat0 = list(model = mod0, test = newdat0),
              dat21 = list(model = mod21, test = newdat21),
              dat22 = list(model = mod22, test = newdat22),
              dat23 = list(model = mod23, test = newdat23))
-res = sapply(data, function(dat) predict(dat$model, newdata = dat$test)[1])
-res
-##   dat0.1   dat1.1   dat2.1   dat3.1   dat4.1   dat5.1   dat6.1   dat7.1 
-## 39430.09 37771.42 37227.35 37482.88 37740.43 38708.58 42382.58 46800.14 
-##   dat8.1   dat9.1  dat10.1  dat11.1  dat12.1  dat13.1  dat14.1  dat15.1 
-## 48155.26 46092.58 44140.57 42814.01 41519.75 40451.49 39414.04 38731.10 
-##  dat16.1  dat17.1  dat18.1  dat19.1  dat20.1  dat21.1  dat22.1  dat23.1 
-## 38571.77 39232.09 41950.08 43425.49 44253.15 44602.22 43660.68 41282.58
+
+resultday1 = sapply(data, function(dat) predict(dat$model, newdata = dat$test)[1])
+res1 = data.frame(time = 0:23, expected = resultday1, actual = as.numeric(as.vector(Y_test[1,])))
+ggplot(res1, aes(time)) + geom_line(aes(y = expected, colour = "expected")) + geom_line(aes(y = actual, colour = "actual"))
 ```
+
+<img src="README_figs/README-unnamed-chunk-6-1.png" width="672" />
 
 \`
