@@ -31,12 +31,16 @@ img <- readPNG("README-electricity graph-1.png")
 grid.raster(img)
 ```
 
-A peak around the summer time
+A peak around the summer time; noticeable trend
 
-## Load in Spring vs Load in Summer  
+Texas has a similar climate to Illinois. High energy usage in summers and winters.
+
+## Load in Spring(March) vs Load in Summer(July)  
 ![](README-March HeatMap-1.png){ width=49% } ![](README-July HeatMap-1.png){ width=49% }
 
-Very hot in the summer
+Relatively low energy consumption in the mornings, high in the afternoons and evenings
+
+Very hot in the summer = a lot air conditioners in use, everyday looks very similar
 
 ## Prediction Strategy
 - 3 features: Load at hour t from the exact moment 7 days, 2 days and 1 day ago 
