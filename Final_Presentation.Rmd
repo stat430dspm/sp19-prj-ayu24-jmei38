@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = FALSE)
 ## Introduction/Background
 - Data is from Electric Reliability Council of Texas (ERCOT)
   - Manages the flow of electricity power and represents over 90% of the state's electric load
-- Our focus is Predicting the next 24 hour load based on past historical data
+- Our focus is to predict the next 24 hour load based on past historical data
 ```{r}
 library(png)
 library(grid)
@@ -24,19 +24,19 @@ grid.raster(img)
 - GOAL: Predict the next 24 hour load using past history of demands
 
 
-## Slide with Bullets
+## Data Exploration I
 
--Visualize Electricity Demand
 ```{r}
 img <- readPNG("README-electricity graph-1.png")
 grid.raster(img)
 ```
+A peak around the summer time
 
-
-## Slide with R Output
+## Winter vs Summer 
 
 ```{r cars, echo = TRUE}
-summary(cars)
+img <- readPNG("README-July HeatMap-1.png")
+grid.raster(img)
 ```
 
 ## Slide with Plot
