@@ -14,7 +14,7 @@ First Slide
 
 ->We wanted to know how do electric companies know how much power they have to generate.
 
-->We wanted to know why it’s important to know how much electricity at least a day in advance.
+->We wanted to know why itâ€™s important to know how much electricity at least a day in advance.
 
 Graphs
 ========================================================
@@ -25,9 +25,24 @@ library(png)
 library(grid)
 ```
 
+```r
+img1 <- readPNG('README_figs/README-electricity graph-1.png')
+grid.raster(img1)
 
+img2 <- readPNG('README_figs/README-wind output graph-1.png')
+grid.raster(img2)
 
+img3 <- readPNG('README_figs/README-January HeatMap-1.png')
+grid.raster(img3)
 
+img4 <- readPNG('README_figs/README-July HeatMap-1.png')
+grid.raster(img4)
 ```
-Error in readPNG("graph1.JPG") : unable to open graph1.JPG
-```
+
+![plot of chunk unnamed-chunk-2](430 Presentation-figure/unnamed-chunk-2-1.png)
+
+
+Slide With Plot
+========================================================
+
+![plot of chunk unnamed-chunk-3](430 Presentation-figure/unnamed-chunk-3-1.png)

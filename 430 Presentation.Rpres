@@ -24,7 +24,17 @@ library(png)
 library(grid)
 ```
 ```{r}
+img1 <- readPNG('README_figs/README-electricity graph-1.png')
+grid.raster(img1)
 
+img2 <- readPNG('README_figs/README-wind output graph-1.png')
+grid.raster(img2)
+
+img3 <- readPNG('README_figs/README-January HeatMap-1.png')
+grid.raster(img3)
+
+img4 <- readPNG('README_figs/README-July HeatMap-1.png')
+grid.raster(img4)
 ```
 
 
