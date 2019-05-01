@@ -613,7 +613,9 @@ rmse(error) # Root Mean Squared Error
 ## Conclusion/Future Work
 
 -Use more sophfisicated prediction methods (Neural Networks, or time series model)
+
 -Optimize code, analyze data over several years instead of just one year
+
 -Incorporate weather data from another source and see if that helps with prediction
 
 
