@@ -10,16 +10,9 @@ knitr::opts_chunk$set(collapse=TRUE, comment="##", fig.retina=2, fig.path = "REA
 
 Roadmap:
 
-predict electricity load* with and without wind power using linear and non-linear methods,
+report results/conclusions and descriptive text for visuals
 
-report results/conclusions
-
--data exploration,data visualizations (make heatmap)
-
-*predict 24 hour load using past history of demands and identify how wind energy affects energy forecasting
 # Electricity Load Prediction in Texas
-
-
 
 ## Introduction
 
@@ -68,8 +61,7 @@ ggplot(dfDemand, aes(x = days, y = demands)) + geom_line(color = "dodgerblue") +
   theme_minimal()
 ```
 
-
-## Wind data
+For fun, let's look at the production of wind energy of the year.
 
 ```{r wind output graph, echo=FALSE}
 dfDemand$Windless_Load = dfDemand$ERCOT.Load..MW - dfDemand$Total.Wind.Output..MW
@@ -186,7 +178,7 @@ X = data.frame(X)
 
 After Organzing the data we will start making our train and test data.
 
-```{r}
+```{r, echo=FALSE}
 set.seed(62)
 test_inds = createDataPartition(y = 1:nrow(Y), p = 0.2, list = F)
 
@@ -225,18 +217,22 @@ colnames(X_test) = c("day7.00", "day7.01",  "day7.02", "day7.03", "day7.04", "da
                 "day1.00", "day1.01",  "day1.02", "day1.03", "day1.04", "day1.05", "day1.06", "day1.07"
                 , "day1.08", "day1.09", "day1.10", "day1.11", "day1.12", "day1.13", "day1.14", "day1.15",
                  "day1.16", "day1.17", "day1.18", "day1.19", "day1.20", "day1.21", "day1.22", "day1.23")
+```
+Check dimensions of our X and Y sets to see if they are consistent.
+```{r}
 dim(X_train)
 dim(X_test)
 dim(Y_train)
 dim(Y_test)
 ```
 
-## Prediction
 
-### linear regression 
+## Prediction Using Multiple Linear Regression 
 
 Predict Load of tommorrow at hour i based on last 7 days at time i, last 2 days at time i and yesterday at time i where $i\in {1,2,... 23}$
-```{r}
+
+In total there will be 24 linear models for each hour of the day.
+```{r, echo=FALSE}
 #predict the load at each hour using linear regression
 
 #retrieve training data at hour i
@@ -345,12 +341,11 @@ newdat22 = data.frame(pday7 = X_test$day7.22, pday2=X_test$day2.22, pday1=X_test
 newdat23 = data.frame(pday7 = X_test$day7.23, pday2=X_test$day2.23, pday1=X_test$day1.23)
 
 
-#use our model to predict the expect load at hour 0
-predict(mod0, newdata = newdat0)[1]
+#use our model to predict the expect load at hour i
 
 # 72 numbers should be returned; 1 for each day
 ```
-```{r}
+```{r, echo=FALSE}
 #temp = NULL
 #for (i in 1:24) {
  # temp = rbind(temp, c(i-1, predict(eval(as.name(paste0('mod',i-1))), newdata = eval(as.name(paste0('newdat',i-1))))[1]))
@@ -358,6 +353,7 @@ predict(mod0, newdata = newdat0)[1]
 #temp
 ```
 
+## model and test data setup
 ```{r}
 data <- list(dat0 = list(model = mod0, test = newdat0),
              dat1 = list(model = mod1, test = newdat1),
@@ -385,8 +381,8 @@ data <- list(dat0 = list(model = mod0, test = newdat0),
              dat23 = list(model = mod23, test = newdat23))
 ```
 
-# Results
-```{r}
+## Results
+```{r, echo=FALSE}
 resultday1 = sapply(data, function(dat) predict(dat$model, newdata = dat$test)[1])
 res1 = data.frame(time = 0:23, Predicted = resultday1, Measured = as.numeric(as.vector(Y_test[1,])))
 
@@ -398,7 +394,7 @@ gph1 <- ggplot(res1, aes(time)) +
   theme(legend.title=element_blank(), axis.title.x=element_blank(), axis.title.y=element_blank())
 
 resultday2 = sapply(data, function(dat) predict(dat$model, newdata = dat$test)[2])
-res2 = data.frame(time = 0:23, Predicted = resultday1, Measured = as.numeric(as.vector(Y_test[2,])))
+res2 = data.frame(time = 0:23, Predicted = resultday2, Measured = as.numeric(as.vector(Y_test[2,])))
 
 gph2 <- ggplot(res2, aes(time)) + 
   geom_line(aes(y = Measured, color = "Measured")) + 
@@ -408,7 +404,7 @@ gph2 <- ggplot(res2, aes(time)) +
   theme(legend.title=element_blank(), axis.title.x=element_blank(), axis.title.y=element_blank(), legend.position="none")
 
 resultday3 = sapply(data, function(dat) predict(dat$model, newdata = dat$test)[3])
-res3 = data.frame(time = 0:23, Predicted = resultday1, Measured = as.numeric(as.vector(Y_test[3,])))
+res3 = data.frame(time = 0:23, Predicted = resultday3, Measured = as.numeric(as.vector(Y_test[3,])))
 
 gph3 <- ggplot(res3, aes(time)) + 
   geom_line(aes(y = Measured, color = "Measured")) + 
@@ -418,7 +414,7 @@ gph3 <- ggplot(res3, aes(time)) +
   theme(legend.title=element_blank(), axis.title.x=element_blank(), axis.title.y=element_blank(), legend.position="none")
 
 resultday4 = sapply(data, function(dat) predict(dat$model, newdata = dat$test)[4])
-res4 = data.frame(time = 0:23, Predicted = resultday1, Measured = as.numeric(as.vector(Y_test[4,])))
+res4 = data.frame(time = 0:23, Predicted = resultday4, Measured = as.numeric(as.vector(Y_test[4,])))
 
 gph4 <- ggplot(res4, aes(time)) + 
   geom_line(aes(y = Measured, color = "Measured")) + 
@@ -428,7 +424,7 @@ gph4 <- ggplot(res4, aes(time)) +
   theme(legend.title=element_blank(), axis.title.x=element_blank(), axis.title.y=element_blank(), legend.position="none")
 
 resultday5 = sapply(data, function(dat) predict(dat$model, newdata = dat$test)[5])
-res5 = data.frame(time = 0:23, Predicted = resultday1, Measured = as.numeric(as.vector(Y_test[5,])))
+res5 = data.frame(time = 0:23, Predicted = resultday5, Measured = as.numeric(as.vector(Y_test[5,])))
 
 gph5 <- ggplot(res5, aes(time)) + 
   geom_line(aes(y = Measured, color = "Measured")) + 
@@ -438,7 +434,7 @@ gph5 <- ggplot(res5, aes(time)) +
   theme(legend.title=element_blank(), axis.title.x=element_blank(), axis.title.y=element_blank(), legend.position="none")
 
 resultday6 = sapply(data, function(dat) predict(dat$model, newdata = dat$test)[6])
-res6 = data.frame(time = 0:23, Predicted = resultday1, Measured = as.numeric(as.vector(Y_test[6,])))
+res6 = data.frame(time = 0:23, Predicted = resultday6, Measured = as.numeric(as.vector(Y_test[6,])))
 
 gph6 <- ggplot(res6, aes(time)) + 
   geom_line(aes(y = Measured, color = "Measured")) + 
@@ -447,17 +443,118 @@ gph6 <- ggplot(res6, aes(time)) +
   theme_classic() + 
   theme(legend.title=element_blank(), axis.title.x=element_blank(), axis.title.y=element_blank(), legend.position="none")
 
+resultday7 = sapply(data, function(dat) predict(dat$model, newdata = dat$test)[7])
+res7 = data.frame(time = 0:23, Predicted = resultday7, Measured = as.numeric(as.vector(Y_test[7,])))
+
+gph7 <- ggplot(res7, aes(time)) + 
+  geom_line(aes(y = Measured, color = "Measured")) + 
+  geom_line(aes(y = Predicted, color = "Predicted")) +
+  labs(title = "Day 7") +
+  theme_classic() + 
+  theme(legend.title=element_blank(), axis.title.x=element_blank(), axis.title.y=element_blank(), legend.position="none")
+
+resultday8 = sapply(data, function(dat) predict(dat$model, newdata = dat$test)[8])
+res8 = data.frame(time = 0:23, Predicted = resultday8, Measured = as.numeric(as.vector(Y_test[8,])))
+
+gph8 <- ggplot(res8, aes(time)) + 
+  geom_line(aes(y = Measured, color = "Measured")) + 
+  geom_line(aes(y = Predicted, color = "Predicted")) +
+  labs(title = "Day 8") +
+  theme_classic() + 
+  theme(legend.title=element_blank(), axis.title.x=element_blank(), axis.title.y=element_blank(), legend.position="none")
+
+resultday9 = sapply(data, function(dat) predict(dat$model, newdata = dat$test)[9])
+res9 = data.frame(time = 0:23, Predicted = resultday9, Measured = as.numeric(as.vector(Y_test[9,])))
+
+gph9 <- ggplot(res9, aes(time)) + 
+  geom_line(aes(y = Measured, color = "Measured")) + 
+  geom_line(aes(y = Predicted, color = "Predicted")) +
+  labs(title = "Day 9") +
+  theme_classic() + 
+  theme(legend.title=element_blank(), axis.title.x=element_blank(), axis.title.y=element_blank(), legend.position="none")
+
+resultday10 = sapply(data, function(dat) predict(dat$model, newdata = dat$test)[10])
+res10 = data.frame(time = 0:23, Predicted = resultday10, Measured = as.numeric(as.vector(Y_test[10,])))
+
+gph10 <- ggplot(res10, aes(time)) + 
+  geom_line(aes(y = Measured, color = "Measured")) + 
+  geom_line(aes(y = Predicted, color = "Predicted")) +
+  labs(title = "Day 10") +
+  theme_classic() + 
+  theme(legend.title=element_blank(), axis.title.x=element_blank(), axis.title.y=element_blank(), legend.position="none")
+
+resultday11 = sapply(data, function(dat) predict(dat$model, newdata = dat$test)[11])
+res11 = data.frame(time = 0:23, Predicted = resultday11, Measured = as.numeric(as.vector(Y_test[11,])))
+
+gph11 <- ggplot(res11, aes(time)) + 
+  geom_line(aes(y = Measured, color = "Measured")) + 
+  geom_line(aes(y = Predicted, color = "Predicted")) +
+  labs(title = "Day 11") +
+  theme_classic() + 
+  theme(legend.title=element_blank(), axis.title.x=element_blank(), axis.title.y=element_blank(), legend.position="none")
+
+resultday12 = sapply(data, function(dat) predict(dat$model, newdata = dat$test)[12])
+res12 = data.frame(time = 0:23, Predicted = resultday12, Measured = as.numeric(as.vector(Y_test[12,])))
+
+gph12 <- ggplot(res12, aes(time)) + 
+  geom_line(aes(y = Measured, color = "Measured")) + 
+  geom_line(aes(y = Predicted, color = "Predicted")) +
+  labs(title = "Day 12") +
+  theme_classic() + 
+  theme(legend.title=element_blank(), axis.title.x=element_blank(), axis.title.y=element_blank(), legend.position="none")
+
+resultday13 = sapply(data, function(dat) predict(dat$model, newdata = dat$test)[13])
+res13 = data.frame(time = 0:23, Predicted = resultday13, Measured = as.numeric(as.vector(Y_test[13,])))
+
+gph13 <- ggplot(res13, aes(time)) + 
+  geom_line(aes(y = Measured, color = "Measured")) + 
+  geom_line(aes(y = Predicted, color = "Predicted")) +
+  labs(title = "Day 13") +
+  theme_classic() + 
+  theme(legend.title=element_blank(), axis.title.x=element_blank(), axis.title.y=element_blank(), legend.position="none")
+
+resultday14 = sapply(data, function(dat) predict(dat$model, newdata = dat$test)[14])
+res14 = data.frame(time = 0:23, Predicted = resultday14, Measured = as.numeric(as.vector(Y_test[14,])))
+
+gph14 <- ggplot(res14, aes(time)) + 
+  geom_line(aes(y = Measured, color = "Measured")) + 
+  geom_line(aes(y = Predicted, color = "Predicted")) +
+  labs(title = "Day 14") +
+  theme_classic() + 
+  theme(legend.title=element_blank(), axis.title.x=element_blank(), axis.title.y=element_blank(), legend.position="none")
+
+resultday15 = sapply(data, function(dat) predict(dat$model, newdata = dat$test)[15])
+res15 = data.frame(time = 0:23, Predicted = resultday15, Measured = as.numeric(as.vector(Y_test[15,])))
+
+gph15 <- ggplot(res15, aes(time)) + 
+  geom_line(aes(y = Measured, color = "Measured")) + 
+  geom_line(aes(y = Predicted, color = "Predicted")) +
+  labs(title = "Day 15") +
+  theme_classic() + 
+  theme(legend.title=element_blank(), axis.title.x=element_blank(), axis.title.y=element_blank(), legend.position="none")
+
+resultday16 = sapply(data, function(dat) predict(dat$model, newdata = dat$test)[16])
+res16 = data.frame(time = 0:23, Predicted = resultday16, Measured = as.numeric(as.vector(Y_test[16,])))
+
+gph16 <- ggplot(res16, aes(time)) + 
+  geom_line(aes(y = Measured, color = "Measured")) + 
+  geom_line(aes(y = Predicted, color = "Predicted")) +
+  labs(title = "Day 16") +
+  theme_classic() + 
+  theme(legend.title=element_blank(), axis.title.x=element_blank(), axis.title.y=element_blank(), legend.position="none")
 ```
 
-```{r}
+Here we choose 16 days to see how well our predictions were.
+```{r, echo=FALSE}
 legend = get_legend(gph1 + theme(legend.position="bottom"))
 gph1 = gph1 + theme(legend.position = "none")
 
 
+bigPlot = plot_grid(gph1, gph2, gph3, gph4, gph5, gph6, gph7, gph8, gph9, gph10, gph11, gph12, gph13,
+                    gph14, gph15, gph16,
+                    align = 'vh', hjust = -1, nrow = 4)
 
-bigPlot = plot_grid(gph1, gph2, gph3, gph4, gph5, gph6, align = 'vh', hjust = -1, nrow = 2)
-
-p <- plot_grid(bigPlot, legend, ncol = 1, rel_heights = c(1,.2))
+p <- plot_grid(bigPlot, legend, ncol = 1, rel_heights = c(3,.2))
 y.grob <- textGrob("Demand in Texas (in MW)", 
                    gp=gpar(fontface="bold", col="black", fontsize=15), rot=90)
 x.grob <- textGrob("Time of day (in hours)", 
@@ -465,6 +562,40 @@ x.grob <- textGrob("Time of day (in hours)",
 
 grid.arrange(arrangeGrob(p, left = y.grob, bottom = x.grob))
 ```
+
+Check if the number of predictions we have matches the number of measured values in the test set.
+```{r}
+predictions = sapply(data, function(dat) predict(dat$model, newdata = dat$test))
+
+dim(predictions)
+dim(Y_test)
+
+```
+
+### Testing Accuracy using Min-Max (closer to 1, the better)
+
+```{r, echo=FALSE}
+TrueOutput <- as.vector(t(Y_test))
+PredOutput <- c(predictions)
+
+act_pred <- data.frame(cbind(actuals = TrueOutput, predicteds = PredOutput))
+```
+
+```{r}
+min_max <- mean(apply(act_pred, 1, min) / apply(act_pred, 1, max))
+print(min_max)
+```
+
+### Other Assessment Metrics
+```{r}
+source('Functions.R')
+error = act_pred$actuals - act_pred$predicteds
+mae(error) # Mean Absolute Error
+rmse(error) # Root Mean Squared Error
+```
+
+## Conclusion/Future Work
+
 
 
 
