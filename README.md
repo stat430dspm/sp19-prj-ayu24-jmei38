@@ -1,21 +1,21 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
 Roadmap:
 
 report results/conclusions and descriptive text for visuals
 
-# Electricity Load Prediction in Texas
+Electricity Load Prediction in Texas
+====================================
 
-## Introduction
+Introduction
+------------
 
 How do electric companies know how much power they have to generate?
 
-But why is it important to predict hourly demand for electricity at
-least a day in advance? You need to know much generators needs to be on
-to meet the expected demand and turning on a generator requires time.
+But why is it important to predict hourly demand for electricity at least a day in advance? You need to know much generators needs to be on to meet the expected demand and turning on a generator requires time.
 
-## Libraries/packages we will be using
+Libraries/packages we will be using
+-----------------------------------
 
 ``` r
 new_cran_packages <- c("ggplot2", "caret","stringr", "cowplot", "grid", "gridExtra")
@@ -33,27 +33,25 @@ library(grid)
 library(gridExtra)
 ```
 
-## Load the ERCOT 2018 data
+Load the ERCOT 2018 data
+------------------------
 
-Let’s see how does load vary over the year in Texas.
-<img src="README_figs/README-electricity graph-1.png" width="672" />
+Let's see how does load vary over the year in Texas. <img src="README_figs/README-electricity graph-1.png" width="672" />
 
-For fun, let’s look at the production of wind energy of the year.
+For fun, let's look at the production of wind energy of the year.
 
 <img src="README_figs/README-wind output graph-1.png" width="672" />
 
-Wind Power looks very sporadic while electricity demands seems to have a
-trend.
+Wind Power looks very sporadic while electricity demands seems to have a trend.
 
 <img src="README_figs/README-March HeatMap-1.png" width="672" />
 
 <img src="README_figs/README-July HeatMap-1.png" width="672" />
 
-## Demand Prediction Strategy and Data Aggregation
+Demand Prediction Strategy and Data Aggregation
+-----------------------------------------------
 
-For our independent variables we will use past week, past 2 days, past 1
-day to predict the electiricty demand of tomorrow. i.e days to train on
--7, -2, -1
+For our independent variables we will use past week, past 2 days, past 1 day to predict the electiricty demand of tomorrow. i.e days to train on -7, -2, -1
 
 ``` r
 daysToTrainOn = c(-7,-2,-1)
@@ -94,14 +92,15 @@ dim(Y_test)
 ## [1] 72 24
 ```
 
-## Prediction Using Multiple Linear Regression
+Prediction Using Multiple Linear Regression
+-------------------------------------------
 
-Predict Load of tommorrow at hour i based on last 7 days at time i, last
-2 days at time i and yesterday at time i where \(i\in {1,2,... 23}\)
+Predict Load of tommorrow at hour i based on last 7 days at time i, last 2 days at time i and yesterday at time i where *i* ∈ 1, 2, ...23
 
 In total there will be 24 linear models for each hour of the day.
 
-## model and test data setup
+model and test data setup
+-------------------------
 
 ``` r
 data <- list(dat0 = list(model = mod0, test = newdat0),
@@ -130,13 +129,12 @@ data <- list(dat0 = list(model = mod0, test = newdat0),
              dat23 = list(model = mod23, test = newdat23))
 ```
 
-## Results
+Results
+-------
 
-Here we choose 16 days to see how well our predictions were.
-<img src="README_figs/README-unnamed-chunk-9-1.png" width="672" />
+Here we choose 16 days to see how well our predictions were. <img src="README_figs/README-unnamed-chunk-9-1.png" width="672" />
 
-Check if the number of predictions we have matches the number of
-measured values in the test set.
+Check if the number of predictions we have matches the number of measured values in the test set.
 
 ``` r
 predictions = sapply(data, function(dat) predict(dat$model, newdata = dat$test))
@@ -152,7 +150,7 @@ dim(Y_test)
 ``` r
 min_max <- mean(apply(act_pred, 1, min) / apply(act_pred, 1, max))
 print(min_max)
-## [1] 0.8081446
+## [1] 0.8117769
 ```
 
 ### Other Assessment Metrics
@@ -161,11 +159,12 @@ print(min_max)
 source('Functions.R')
 error = act_pred$actuals - act_pred$predicteds
 mae(error) # Mean Absolute Error
-## [1] 9991.805
+## [1] 9634.81
 rmse(error) # Root Mean Squared Error
-## [1] 12886.66
+## [1] 12225.49
 ```
 
-## Conclusion/Future Work
+Conclusion/Future Work
+----------------------
 
 \`
