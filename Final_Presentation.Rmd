@@ -1,0 +1,47 @@
+---
+title: "Electricity Load Prediction in Texas"
+author: "Alan Yu, Justin Mei"
+date: "4/30/2019"
+output: 
+  ioslides_presentation:
+    widescreen: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Introduction/Background
+- Data is from Electric Reliability Council of Texas (ERCOT)
+  - Manages the flow of electricity power and represents over 90% of the state's electric load
+- Our focus is Predicting the next 24 hour load based on past historical data
+```{r}
+library(png)
+library(grid)
+img <- readPNG("ercotwebsite.png")
+grid.raster(img)
+```
+- GOAL: Predict the next 24 hour load using past history of demands
+
+
+## Slide with Bullets
+
+-Visualize Electricity Demand
+```{r}
+img <- readPNG("README-electricity graph-1.png")
+grid.raster(img)
+```
+
+
+## Slide with R Output
+
+```{r cars, echo = TRUE}
+summary(cars)
+```
+
+## Slide with Plot
+
+```{r pressure}
+plot(pressure)
+```
+

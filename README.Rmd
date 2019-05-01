@@ -74,12 +74,12 @@ ggplot(dfDemand, aes(x = days, y = windOutput)) + geom_line(color = "orange") +
 
 Wind Power looks very sporadic while electricity demands seems to have a trend.
 
-```{r January HeatMap, echo=FALSE}
-monthOfJan = dfDemand[grep("Jan", dfDemand$Date), ]
-monthOfJan$Day = str_split_fixed(monthOfJan$ï..time.date.stamp, " ", 2)[,1]
-monthOfJan$Hour = str_split_fixed(monthOfJan$ï..time.date.stamp, " ", 2)[,2]
-monthOfJan$Day = as.Date(monthOfJan$Day, "%m/%d/%Y")
-monthOfJan$Hour = as.numeric(format(strptime(monthOfJan$Hour,"%H:%M:%S"),'%H'))
+```{r March HeatMap, echo=FALSE}
+monthOfMar = dfDemand[grep("Mar", dfDemand$Date), ]
+monthOfMar$Day = str_split_fixed(monthOfMar$ï..time.date.stamp, " ", 2)[,1]
+monthOfMar$Hour = str_split_fixed(monthOfMar$ï..time.date.stamp, " ", 2)[,2]
+monthOfMar$Day = as.Date(monthOfMar$Day, "%m/%d/%Y")
+monthOfMar$Hour = as.numeric(format(strptime(monthOfMar$Hour,"%H:%M:%S"),'%H'))
 
 #monthOfJan = monthOfJan %>% 
  # mutate(weekday = weekdays(Day)) %>%
@@ -96,12 +96,12 @@ theme_heatmap = theme_light() +
         axis.text.x = element_text(size = 10, angle = 90, hjust = 1),
         axis.text.y = element_text(size = 8))
 
-ggJan = ggplot(monthOfJan, mapping = aes(x = Date, y = Hour, fill = ERCOT.Load..MW)) +
+ggJan = ggplot(monthOfMar, mapping = aes(x = Date, y = Hour, fill = ERCOT.Load..MW)) +
   geom_tile(colour = "white") + 
-  scale_fill_gradient(low = "#f4fff6", high= "#0bb730") +
+  scale_fill_gradient(low = "#ffd89b", high= "#19547b") +
   scale_y_reverse(breaks=c(23:0), labels=c(23:0), expand = c(0,0)) +
   scale_x_discrete(expand = c(0,0), position = "top") +
-  labs(title = "Electricity Demand Profile in January 2018", y = "Hour of Day", fill = "Load (in MW)") + 
+  labs(title = "Electricity Demand Profile in March 2018", y = "Hour of Day", fill = "Load (in MW)") + 
   theme_heatmap 
 
 print(ggJan)
@@ -116,7 +116,7 @@ monthOfJuly$Hour = as.numeric(format(strptime(monthOfJuly$Hour,"%H:%M:%S"),'%H')
 
 ggJuly = ggplot(monthOfJuly, mapping = aes(x = Date, y = Hour, fill = ERCOT.Load..MW)) +
   geom_tile(colour = "white") + 
-  scale_fill_gradient(low = "#f4fff6", high= "#0bb730") +
+  scale_fill_gradient(low = "#ffd89b", high= "#19547b") +
   scale_y_reverse(breaks=c(23:0), labels=c(23:0), expand = c(0,0)) +
   scale_x_discrete(expand = c(0,0), position = "top") +
   labs(title = "Electricity Demand Profile in July 2018", y = "Hour of Day", fill = "Load (in MW)") +
