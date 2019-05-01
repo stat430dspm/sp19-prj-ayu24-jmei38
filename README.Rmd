@@ -569,7 +569,6 @@ predictions = sapply(data, function(dat) predict(dat$model, newdata = dat$test))
 
 dim(predictions)
 dim(Y_test)
-
 ```
 
 ### Testing Accuracy using Min-Max (closer to 1, the better)
@@ -584,6 +583,7 @@ act_pred <- data.frame(cbind(actuals = TrueOutput, predicteds = PredOutput))
 ```{r}
 min_max <- mean(apply(act_pred, 1, min) / apply(act_pred, 1, max))
 print(min_max)
+
 ```
 
 ### Other Assessment Metrics

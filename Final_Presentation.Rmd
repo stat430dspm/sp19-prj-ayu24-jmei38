@@ -24,24 +24,29 @@ grid.raster(img)
 - GOAL: Predict the next 24 hour load using past history of demands
 
 
-## Data Exploration I
+## Data Exploration 
 
 ```{r}
 img <- readPNG("README-electricity graph-1.png")
 grid.raster(img)
 ```
+
 A peak around the summer time
 
-## Winter vs Summer 
+## Load in Spring vs Load in Summer  
+![](README-March HeatMap-1.png){ width=49% } ![](README-July HeatMap-1.png){ width=49% }
 
-```{r cars, echo = TRUE}
-img <- readPNG("README-July HeatMap-1.png")
-grid.raster(img)
-```
+Very hot in the summer
 
-## Slide with Plot
+## Prediction Strategy
+- 3 features: Load at hour t from the exact moment 7 days, 2 days and 1 day ago 
 
-```{r pressure}
-plot(pressure)
-```
+- Split data in train (284 days) and test (72 days) set
 
+- Predict Demand at Hour t, $t \in \left \{0,1,2...23 \right \}$
+$$ Demand_{t}=\beta_{0}+\beta_{1} \text {7days ago}_{t}+\beta_{2} \text {2days ago }_{t}+\beta_{3} \text { 1day ago}_{t} + \epsilon$$
+- In total: 24 regression models for each hour of a day
+
+## Results & Room for Improvement
+Testing Acc: 81% ; Could be better if used non-linear methods (NN, ARIMA)
+![](README-unnamed-chunk-8-1.png){ width=74% }
