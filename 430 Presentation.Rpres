@@ -24,11 +24,9 @@ library(png)
 library(grid)
 ```
 ```{r}
-img <- readPNG('graph1.JPG')
-grid.raster(img)
+
 ```
 
-http://127.0.0.1:21797/chunk_output/s/A807DCEA/cvnyis9ovnytw/000003.png
 
 Slide With Plot
 ========================================================
