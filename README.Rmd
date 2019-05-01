@@ -8,19 +8,13 @@ output: rmarkdown::github_document
 knitr::opts_chunk$set(collapse=TRUE, comment="##", fig.retina=2, fig.path = "README_figs/README-")
 ```
 
-Roadmap:
-
-report results/conclusions and descriptive text for visuals
-
 # Electricity Load Prediction in Texas
 
 ## Introduction
 
-How do electric companies know how much power they have to generate? 
+How do electric companies know how much power they have to generate? They constantly keep track of how much energy is being consumed and many times it is very predictable as we will demonstrate in this analysis. The main goal of this analysis is to see if we can predict the next 24 hours of electricity consumption using past historical data. 
 
-
-But why is it important to predict hourly demand for electricity at least a day in advance? You need to know much generators needs to be on to meet the expected demand and turning on a generator requires time.
-
+Why is it important to predict hourly demand for electricity at least a day in advance? You need to know much generators needs to be on to meet the expected demand and turning on a generator requires time (to ramp up/down). If you underestimate the load demand then there would be places without power and will have far reaching consequences. If you overestimate by a large margin then energy produced would be wasted and you would 'lose' money (i.e more supply than demand). 
 
 
 ## Libraries/packages we will be using
@@ -96,7 +90,7 @@ theme_heatmap = theme_light() +
         axis.text.x = element_text(size = 10, angle = 90, hjust = 1),
         axis.text.y = element_text(size = 8))
 
-ggJan = ggplot(monthOfMar, mapping = aes(x = Date, y = Hour, fill = ERCOT.Load..MW)) +
+ggMar = ggplot(monthOfMar, mapping = aes(x = Date, y = Hour, fill = ERCOT.Load..MW)) +
   geom_tile(colour = "white") + 
   scale_fill_gradient(low = "#F9F871", high= "#FF9671") +
   scale_y_reverse(breaks=c(23:0), labels=c(23:0), expand = c(0,0)) +
@@ -104,8 +98,10 @@ ggJan = ggplot(monthOfMar, mapping = aes(x = Date, y = Hour, fill = ERCOT.Load..
   labs(title = "Electricity Demand Profile in March 2018", y = "Hour of Day", fill = "Load (in MW)") + 
   theme_heatmap 
 
-print(ggJan)
+print(ggMar)
 ```
+
+The white square in Mar 11 @ 2:00 indicates a missing data point. March is typically spring time so loads are not considered to be high and colors show a trend: low load during the mornings and weekends, high in the afternoon and evenings in the weekdays.
 
 ```{r July HeatMap, echo=FALSE}
 monthOfJuly <- dfDemand[grep("Jul", dfDemand$Date), ]
@@ -125,11 +121,12 @@ ggJuly = ggplot(monthOfJuly, mapping = aes(x = Date, y = Hour, fill = ERCOT.Load
 print(ggJuly)
 ```
 
+The summer season in Texas can get very hot so many people would be using there air conditioning systems which leads to increased demand for electricity. We see a similar trend as in March: low in the mornings, high in the afternoon and evenings. Now we don't we the difference in weekday vs weekend, now there seems to be no difference depending on the day of the week.
 
 
 ## Demand Prediction Strategy and Data Aggregation
 
-For our independent variables we will use past week, past 2 days, past 1 day to predict the electiricty demand of tomorrow. i.e days to train on -7, -2, -1
+Based on our observations from the graphs and heatmap, We don't want to use a linear regression to fit a line through the data, so we will predict each hour instead. Therfore to predict effectively, We will use past week, past 2 days, past 1 day to predict the electiricty demand of tomorrow. i.e days to train on $d - 7$, $d - 2$, $d - 1$, to predict load on day $d$.
 
 
 ```{r organize data}
@@ -147,16 +144,17 @@ for (day in rangeOfDays) {
             t(dfDemand$ERCOT.Load..MW[(((day - 1)*24) +1):((day - 1 + 1)*24)]))
   X = rbind(X, X_temp)
 }
+
 dim(X)
 dim(Y)
 
-Y = data.frame(Y)
 X = data.frame(X)
+Y = data.frame(Y)
 ```
 
+Rows is dates and our columns will be the hours in a day. Each day has 24 hours and since we are using days as our features there will be 72 columns for our input X.
 
 ```{r, echo=FALSE}
-# Windless 
 #daysToTrainOn = c(-7,-2,-1)
 #rangeOfDays = seq(-min(daysToTrainOn), numberOfDays - 1, by = 1)
 
@@ -176,10 +174,11 @@ X = data.frame(X)
 #dim(Y)
 ```
 
-After Organzing the data we will start making our train and test data.
+After Organzing the data we will start making our training and testing sets.
 
 ```{r, echo=FALSE}
-set.seed(62)
+set.seed(62) #sum of our netids for reproducibility 
+
 test_inds = createDataPartition(y = 1:nrow(Y), p = 0.2, list = F)
 
 X_test = X[test_inds, ]; Y_test = Y[test_inds,]
@@ -219,6 +218,7 @@ colnames(X_test) = c("day7.00", "day7.01",  "day7.02", "day7.03", "day7.04", "da
                  "day1.16", "day1.17", "day1.18", "day1.19", "day1.20", "day1.21", "day1.22", "day1.23")
 ```
 Check dimensions of our X and Y sets to see if they are consistent.
+
 ```{r}
 dim(X_train)
 dim(X_test)
@@ -226,12 +226,17 @@ dim(Y_train)
 dim(Y_test)
 ```
 
+We will train on 286 days and test on 72 days.
 
 ## Prediction Using Multiple Linear Regression 
 
 Predict Load of tommorrow at hour i based on last 7 days at time i, last 2 days at time i and yesterday at time i where $i\in {1,2,... 23}$
 
-In total there will be 24 linear models for each hour of the day.
+Our regression equation will be: 
+
+$$ Demand_{t}=\beta_{0}+\beta_{1} \text {7days ago}_{t}+\beta_{2} \text {2days ago }_{t}+\beta_{3} \text { 1day ago}_{t} + \epsilon$$
+
+In total there will be 24 linear models; one for each hour of the day.
 ```{r, echo=FALSE}
 #predict the load at each hour using linear regression
 
@@ -346,6 +351,7 @@ newdat23 = data.frame(pday7 = X_test$day7.23, pday2=X_test$day2.23, pday1=X_test
 # 72 numbers should be returned; 1 for each day
 ```
 ```{r, echo=FALSE}
+#method draft for parsing the data
 #temp = NULL
 #for (i in 1:24) {
  # temp = rbind(temp, c(i-1, predict(eval(as.name(paste0('mod',i-1))), newdata = eval(as.name(paste0('newdat',i-1))))[1]))
@@ -353,7 +359,8 @@ newdat23 = data.frame(pday7 = X_test$day7.23, pday2=X_test$day2.23, pday1=X_test
 #temp
 ```
 
-## model and test data setup
+After setting up our models, we set up the our models to see how they perform with the testing dataset.
+
 ```{r}
 data <- list(dat0 = list(model = mod0, test = newdat0),
              dat1 = list(model = mod1, test = newdat1),
@@ -382,7 +389,7 @@ data <- list(dat0 = list(model = mod0, test = newdat0),
 ```
 
 ## Results
-```{r, echo=FALSE}
+```{r 16plots, echo=FALSE}
 resultday1 = sapply(data, function(dat) predict(dat$model, newdata = dat$test)[1])
 res1 = data.frame(time = 0:23, Predicted = resultday1, Measured = as.numeric(as.vector(Y_test[1,])))
 
@@ -544,7 +551,19 @@ gph16 <- ggplot(res16, aes(time)) +
   theme(legend.title=element_blank(), axis.title.x=element_blank(), axis.title.y=element_blank(), legend.position="none")
 ```
 
-Here we choose 16 days to see how well our predictions were.
+Sanity check to see if the number of predictions we have matches the number of measured values in the test set.
+
+```{r}
+predictions = sapply(data, function(dat) predict(dat$model, newdata = dat$test))
+
+dim(predictions)
+dim(Y_test)
+```
+
+
+Let's visualize our results
+
+Here we choose the first 16 days to see how good our predictions were.
 ```{r, echo=FALSE}
 legend = get_legend(gph1 + theme(legend.position="bottom"))
 gph1 = gph1 + theme(legend.position = "none")
@@ -563,13 +582,8 @@ x.grob <- textGrob("Time of day (in hours)",
 grid.arrange(arrangeGrob(p, left = y.grob, bottom = x.grob))
 ```
 
-Check if the number of predictions we have matches the number of measured values in the test set.
-```{r}
-predictions = sapply(data, function(dat) predict(dat$model, newdata = dat$test))
+Overall, it seems to be predicting reasonbly well for a linear model. Though there are some days like day 2 where our model performed poorly. Generally, it is okay to overestimate alittle but it is not good to underestimate. 
 
-dim(predictions)
-dim(Y_test)
-```
 
 ### Testing Accuracy using Min-Max (closer to 1, the better)
 
@@ -586,6 +600,8 @@ print(min_max)
 
 ```
 
+81% testing accuracy not bad!
+
 ### Other Assessment Metrics
 ```{r}
 source('Functions.R')
@@ -596,6 +612,9 @@ rmse(error) # Root Mean Squared Error
 
 ## Conclusion/Future Work
 
+-Use more sophfisicated prediction methods (Neural Networks, or time series model)
+-Optimize code, analyze data over several years instead of just one year
+-Incorporate weather data from another source and see if that helps with prediction
 
 
 
