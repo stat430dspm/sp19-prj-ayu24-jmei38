@@ -230,11 +230,11 @@ We will train on 286 days and test on 72 days.
 
 ## Prediction Using Multiple Linear Regression 
 
-Predict Load of tommorrow at hour i based on last 7 days at time i, last 2 days at time i and yesterday at time i where $i\in {1,2,... 23}$
+Predict Load of tommorrow at hour i based on last 7 days at time i, last 2 days at time i and yesterday at time i where i = {1,2,... 23}
 
 Our regression equation will be: 
 
-$$ Demand_{t}=\beta_{0}+\beta_{1} \text {7days ago}_{t}+\beta_{2} \text {2days ago }_{t}+\beta_{3} \text { 1day ago}_{t} + \epsilon$$
+Demand_t = intercept + (7days ago)_t + (2days ago)_t + (1day ago)_t
 
 In total there will be 24 linear models; one for each hour of the day.
 ```{r, echo=FALSE}
