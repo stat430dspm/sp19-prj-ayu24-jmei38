@@ -207,15 +207,21 @@ rmse(error) # Root Mean Squared Error
 ## [1] 12886.66
 ```
 
+Both the MAE and RMSE is relatively low because the mean absolute error
+and the maximum load demand is very different and far from each other.
+
 ## Conclusion/Future Work
 
-\-Use more sophfisicated prediction methods (Neural Networks, or time
-series model)
+We have shown a simple way to predict electricity demand while getting
+very reasonable accuracy. How ERCOT actually predicts energy consumption
+is definitely a lot more sophisticated than our simple model but the
+main principles remains the same. We use past data to predict the
+future, it is impossible to predict the future with impeccable accuracy
+but we can do better than just guessing.
 
-\-Optimize code, analyze data over several years instead of just one
-year
-
-\-Incorporate weather data from another source and see if that helps
-with prediction
-
-\`
+As for potential room for improvement and future work, we could explore
+more advanced prediction methods such as using a neural network, or
+times series model. The code written could be optimized better and done
+with fewer lines. We might also want to try matching the dataset with a
+weather dataset and use temperature as an additional feature in our
+models.
